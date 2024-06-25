@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "ES2020",
+    "module": "ESNext",
+    "declaration": true,
+    "declarationDir": "dist",
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "react-loading": ["node_modules/react-loading"]
+    }
+  }
+}
+
+// {
+//     "compilerOptions": {
+//       "jsx": "react",
+//       "target": "ES2020",
+//       "module": "ESNext",
+//       "declaration": true,
+//       "declarationDir": "dist",
+//       "strict": true,
+//     }
+//   }
