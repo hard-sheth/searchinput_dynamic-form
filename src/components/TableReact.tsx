@@ -14,6 +14,8 @@ import DebounceInput from "./DebounceInput";
 type dynamicTableProp = {
   data: [] | [Object] | any;
   columns: ColumnDef<any>[];
+  filter: Boolean;
+  sorting: Boolean;
 };
 
 function TableReact(tableProp: dynamicTableProp) {
