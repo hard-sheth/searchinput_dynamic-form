@@ -1,5 +1,5 @@
 import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import React from 'react'
+import * as React from "react";
 import DebounceInput from './DebounceInput'
 
 type dynamicTableProp ={
