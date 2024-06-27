@@ -16,12 +16,12 @@ type dynamicTableProp = {
   columns: ColumnDef<any>[];
   filter: Boolean;
   sorting: Boolean;
+  updateSorting: (data:Object)=>void;
+  updateFilter: (data:Object)=>void;
 };
 
 function TableReact(tableProp: dynamicTableProp) {
-  const { data, columns } = tableProp;
-  console.log(data, columns, "data,columns");
-
+  const { data, columns,filter, sorting, updateSorting, updateFilter } = tableProp;
   const [defaultColumns, setDefaultColumns] = React.useState([...columns]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -40,21 +40,25 @@ function TableReact(tableProp: dynamicTableProp) {
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
   });
+  updateSorting(table.getState().sorting);
+  updateFilter(table.getState().columnFilters); 
   return (
     <table className="table table-striped table-hover table-bordered">
       <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id} colSpan={header.colSpan}>
-                {header.isPlaceholder ? null : (
+      {table.getHeaderGroups().map((headerGroup) => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map((header) => (
+            <th key={header.id} colSpan={header.colSpan}>
+              {header.isPlaceholder
+                ? null
+                :  (
                   <>
                     <div
                       {...{
                         className: header.column.getCanSort()
-                          ? "cursor-pointer select-none"
-                          : "",
-                        onClick: header.column.getToggleSortingHandler(),
+                          ? 'cursor-pointer select-none'
+                          : '',
+                        onClick: sorting?header.column.getToggleSortingHandler():()=>{},
                       }}
                     >
                       {flexRender(
@@ -62,20 +66,21 @@ function TableReact(tableProp: dynamicTableProp) {
                         header.getContext()
                       )}
                       {{
-                        asc: " 🔼",
-                        desc: " 🔽",
+                        asc: ' 🔼',
+                        desc: ' 🔽',
                       }[header.column.getIsSorted() as string] ?? null}
                     </div>
-                    {header.column.getCanFilter() ? (
-                      <DebounceInput column={header.column} />
+                    {filter && header.column.getCanFilter() ? (
+                      <DebounceInput column={header.column}/>
                     ) : null}
                   </>
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
+                )
+              }
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
       <tbody>
         {table.getRowModel().rows.map((row) => (
           <tr key={row.id}>
