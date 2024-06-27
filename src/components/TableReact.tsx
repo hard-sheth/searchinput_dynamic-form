@@ -39,7 +39,6 @@ function TableReact(tableProp: dynamicTableProp) {
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
-    pageCount: Math.ceil(200 / 10),
   });
   return (
     <table className="table table-striped table-hover table-bordered">
