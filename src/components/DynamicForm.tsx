@@ -6,12 +6,13 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import DependantDropdown from "./DependantDropdown";
+import { AiOutlineClear } from "react-icons/ai";
+import { BsFloppy } from "react-icons/bs";
 
-type Inputfields = {
+export type Inputfields = {
   type:
     | "text"
     | "search"
-    | "date"
     | "textarea"
     | "checkbox"
     | "radio"
@@ -25,6 +26,11 @@ type Inputfields = {
     | "dependabledropdown"
     | "arrayform"
     | "secure"
+    | "date"
+    | "datetime"
+    | "time"
+    | "daterange"
+    | "datetimerange"
     | "switch";
   lable?: string | JSX.Element;
   lableClass?: string;
@@ -42,7 +48,7 @@ type Inputfields = {
   somemsg?: string | JSX.Element;
 };
 
-type RadioFields = {
+export type RadioFields = {
   type: "radio";
   placeForLabel: "inline" | "new line";
   options: [SelectOptions];
@@ -54,6 +60,7 @@ type SelectField = {
   defaultvalue?: string | SelectOptions;
   isMulti: boolean;
   maxOptions: number;
+  inputchange?: (data: string) => {};
 } & Inputfields;
 
 type SelectAsync = {
@@ -842,7 +849,11 @@ function DynamicForm(props: FormInput) {
                               isDisabled={false}
                               isLoading={false}
                               isSearchable={true}
+                              options={item.options}
                               isClearable
+                              onInputChange={
+                                item.inputchange ? item.inputchange : () => {}
+                              }
                               // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
                             />
                           )}
@@ -864,6 +875,9 @@ function DynamicForm(props: FormInput) {
                               onChange={(newValue) => {
                                 field.onChange(newValue);
                               }}
+                              onInputChange={
+                                item.inputchange ? item.inputchange : () => {}
+                              }
                               // {...field}
                               loadOptions={item.optionPromise}
                               isClearable
@@ -892,6 +906,9 @@ function DynamicForm(props: FormInput) {
                               {...field}
                               isDisabled={false}
                               isLoading={false}
+                              onInputChange={
+                                item.inputchange ? item.inputchange : () => {}
+                              }
                               isSearchable={true}
                             />
                           )}
@@ -909,6 +926,9 @@ function DynamicForm(props: FormInput) {
                               {...field}
                               dependData={previousData}
                               dependUrl={item.url}
+                              onInputChange={
+                                item.inputchange ? item.inputchange : () => {}
+                              }
                               maxOptions={item?.maxOptions}
                             />
                           )}
@@ -950,6 +970,9 @@ function DynamicForm(props: FormInput) {
             } `}
           >
             <button type="submit" className="btn btn-primary me-2">
+            <i className="me-2">
+                <BsFloppy  />
+              </i>
               Submit
             </button>
             {resetbtn && (
@@ -986,6 +1009,9 @@ function DynamicForm(props: FormInput) {
                   reset();
                 }}
               >
+                 <i className="me-2">
+                  <AiOutlineClear />
+                  </i>
                 Reset
               </button>
             )}
