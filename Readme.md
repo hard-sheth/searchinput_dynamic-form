@@ -19,7 +19,7 @@ Install searchinput_dynamic-form with npm
 
 we have to pass the object From these 
 
-    ```bash
+    ```
     [
         {
             name: "username",
