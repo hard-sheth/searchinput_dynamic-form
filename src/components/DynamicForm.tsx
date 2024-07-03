@@ -105,6 +105,7 @@ type FormInput = {
   resetbtn?: boolean;
   btnPosition?: "start" | "center" | "end";
   inputSideClass?: string;
+  extendForm?: JSX.Element;
 };
 
 function DynamicForm(props: FormInput) {
@@ -119,6 +120,7 @@ function DynamicForm(props: FormInput) {
     resetbtn,
     btnPosition,
     inputSideClass,
+    extendForm
   } = props;
   const {
     control,
@@ -957,6 +959,7 @@ function DynamicForm(props: FormInput) {
               </div>
             );
           })}
+          {extendForm}
           <div
             className={`mt-3 col-12 col-md-12
             ${

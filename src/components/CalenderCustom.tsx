@@ -1,7 +1,8 @@
-import  DatePicker from "react-datepicker";
 import {CustomHeader} from "./CalenderHeader";
 import * as moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
+import * as React from "react";
+import DatePicker from "react-datepicker";
 
 type CalenderProp = {
   minDate?: Date;
@@ -43,7 +44,7 @@ type ParticularDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
  * @returns {JSX.Element}
  */
 
-function CalenderCustom(props: CalenderProp) {
+function Calender(props: CalenderProp) {
   const {
     maxDate,
     minDate,
@@ -66,31 +67,7 @@ function CalenderCustom(props: CalenderProp) {
     timeIntervals = 60,
     changeDate,
     showBottomTime = false,
-    // includeTime = [
-    //   // new Date(0, 0, 0, 8, 0, 0), // 8:00 AM
-    //   // new Date(0, 0, 0, 9, 0, 0), // 9:00 AM
-    //   new Date(0, 0, 0, 10, 0, 0), // 10:00 AM
-    //   new Date(0, 0, 0, 11, 0, 0), // 11:00 AM
-    //   new Date(0, 0, 0, 12, 0, 0), // 12:00 PM
-    //   new Date(0, 0, 0, 13, 0, 0), // 1:00 PM
-    //   new Date(0, 0, 0, 14, 0, 0), // 2:00 PM
-    //   new Date(0, 0, 0, 15, 0, 0), // 3:00 PM
-    //   new Date(0, 0, 0, 16, 0, 0), // 4:00 PM
-    //   new Date(0, 0, 0, 17, 0, 0), // 5:00 PM
-    // ],
-    excludeTime = [
-      // new Date(0, 0, 0, 10, 0, 0),
-      // new Date(0, 0, 0, 11, 0, 0),
-      // new Date(0, 0, 0, 12, 0, 0),
-      // new Date(0, 0, 0, 13, 0, 0),
-      // new Date(0, 0, 0, 14, 0, 0),
-      // new Date(0, 0, 0, 15, 0, 0),
-      // new Date(0, 0, 0, 16, 0, 0),
-      // new Date(0, 0, 0, 17, 0, 0),
-      // new Date(0, 0, 0, 18, 0, 0),
-      // new Date(0, 0, 0, 19, 0, 0),
-      // new Date(0, 0, 0, 20, 0, 0),
-    ],
+    excludeTime = [ ],
   } = props;
 
   const isWeekday = (date: Date) => {
@@ -128,14 +105,10 @@ function CalenderCustom(props: CalenderProp) {
         <CustomHeader {...item} startYear={startYear} endYear={endYear} changeDate={changeDate} />
       )}
       filterDate={isWeekday}
-      // includeDates={[moment().toDate()]}
-      // timeInputLabel="Time:"
       showTimeInput={showBottomTime}
       showTimeSelect={showTime}
       holidays={[...holidays]}
       excludeTimes={excludeTime}
-      // includeTimes={moment(value).weekday() === 6 ? includeTime : excludeTime}
-      // includeTimes={()=>getIncludeTimes(value)}
       filterTime={filterPassedTime}
       timeIntervals={timeIntervals}
     />
@@ -143,5 +116,5 @@ function CalenderCustom(props: CalenderProp) {
 }
 
 export {
-  CalenderCustom
+  Calender
 };

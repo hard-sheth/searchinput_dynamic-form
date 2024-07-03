@@ -118,4 +118,4 @@ const CustomHeader = ({
   );
 };
 
-export default CustomHeader;
+export {CustomHeader};
