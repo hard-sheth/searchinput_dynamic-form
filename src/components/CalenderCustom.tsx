@@ -1,4 +1,4 @@
-import {CustomHeader} from "./CalenderHeader";
+import { CustomHeader } from "./CalenderHeader";
 import * as moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import * as React from "react";
@@ -10,7 +10,8 @@ type CalenderProp = {
   holidays?: [Holiday];
   icons?: JSX.Element;
   removeParticularDays?: [ParticularDay];
-  removeParticularDaysTime?: [String];
+  particlarDayTimes?: [ParticularDay];
+  removeParticularDaysTime?: string[][];
   weekendOff: Boolean;
   name?: String;
   onBlur?: any;
@@ -27,7 +28,10 @@ type CalenderProp = {
   timeIntervals?: number;
   showBottomTime?: boolean;
   excludeTime?: [any];
+  timeBreak: string[][];
   changeDate?: (event: any) => void;
+  dateRange?: boolean;
+  multiDateSelect?: boolean;
 };
 
 type Holiday = {
@@ -48,14 +52,12 @@ function Calender(props: CalenderProp) {
   const {
     maxDate,
     minDate,
-    holidays = [
-      { date: "2024-01-14", holidayName: "Uttaryan" },
-      { date: "2024-01-15", holidayName: "Vasi Uttaryan" },
-    ],
+    holidays = [],
     icons,
     weekendOff,
     removeParticularDays,
     removeParticularDaysTime,
+    particlarDayTimes,
     onChange,
     value,
     error,
@@ -67,7 +69,13 @@ function Calender(props: CalenderProp) {
     timeIntervals = 60,
     changeDate,
     showBottomTime = false,
-    excludeTime = [ ],
+    excludeTime = [],
+    dateRange = false,
+    multiDateSelect = true,
+    timeBreak = [
+      ["10:00", "13:00"],
+      ["14:00", "20:00"],
+    ],
   } = props;
 
   const isWeekday = (date: Date) => {
@@ -85,9 +93,48 @@ function Calender(props: CalenderProp) {
     }
   };
 
-  const filterPassedTime = (time:any) => {
-    const momentselectedDate = moment(time).format('h:mm a');
-    return removeParticularDaysTime?.includes(momentselectedDate)
+  const getTimeIntervalArray = (timeBreakArray: string[][]) => {
+    const timeIntervalArray: any = [];
+
+    timeBreakArray.forEach((timeRange: Array<string>) => {
+      const startTime = moment(timeRange[0], "HH:mm");
+      const endTime = moment(timeRange[1], "HH:mm");
+      console.log(
+        startTime.format("d/MM/YYYY h:mm"),
+        `startTime endTime`,
+        endTime.format("d/MM/YYYY h:mm"),
+        startTime.isBefore(endTime),
+        `startTime.isBefore(endTime)`,
+        timeIntervalArray
+      );
+
+      while (startTime.isBefore(endTime)) {
+        timeIntervalArray.push(startTime.format("HH:mm"));
+        console.log(startTime.format("HH:mm"), 1);
+        startTime.add(timeIntervals, "minutes");
+        console.log(startTime.format("HH:mm"), 2);
+      }
+    });
+
+    return timeIntervalArray;
+  };
+
+  const filterPassedTime = (time: any) => {
+    const momentselectedDate = moment(time).format("H:mm");
+    const weekDay = moment(time).weekday() as ParticularDay;
+    if (removeParticularDaysTime) {
+      const timeIntervalArrayWeekend = getTimeIntervalArray(
+        removeParticularDaysTime
+      );
+      const timeIntervalArray = getTimeIntervalArray(timeBreak);
+      if (particlarDayTimes?.includes(weekDay)) {
+        return timeIntervalArrayWeekend?.includes(momentselectedDate);
+      } else {
+        return timeIntervalArray?.includes(momentselectedDate);
+      }
+    } else {
+      return true;
+    }
   };
 
   return (
@@ -96,13 +143,27 @@ function Calender(props: CalenderProp) {
       icon={icons}
       toggleCalendarOnIconClick
       className={`${error ? "is-invalid" : ""} form-control`}
-      selected={value}
-      onChange={(date) => onChange(date)}
+      selected={
+        Array.isArray(value) && dateRange && !multiDateSelect
+          ? value[0]
+          : multiDateSelect
+          ? null
+          : value
+      }
+      selectedDates={multiDateSelect?value:value}
+      onChange={(dates: Date | null | [Date | null, Date | null] | Date[]) => {
+        onChange(dates);
+      }}
       minDate={minDate}
       maxDate={maxDate}
       dateFormat={dateFormat}
-      renderCustomHeader={(item:any) => (
-        <CustomHeader {...item} startYear={startYear} endYear={endYear} changeDate={changeDate} />
+      renderCustomHeader={(item: any) => (
+        <CustomHeader
+          {...item}
+          startYear={startYear}
+          endYear={endYear}
+          changeDate={changeDate}
+        />
       )}
       filterDate={isWeekday}
       showTimeInput={showBottomTime}
@@ -111,10 +172,14 @@ function Calender(props: CalenderProp) {
       excludeTimes={excludeTime}
       filterTime={filterPassedTime}
       timeIntervals={timeIntervals}
+      startDate={Array.isArray(value) && dateRange ? value[0] : undefined}
+      selectsRange={dateRange?true:undefined}
+      endDate={Array.isArray(value) && dateRange ? value[1] : undefined}
+      selectsMultiple={multiDateSelect?true:undefined}
+      shouldCloseOnSelect={!dateRange && !multiDateSelect}
+      disabledKeyboardNavigation
     />
   );
 }
 
-export {
-  Calender
-};
+export { Calender };
