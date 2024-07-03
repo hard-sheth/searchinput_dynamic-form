@@ -19,7 +19,7 @@ Install searchinput_dynamic-form with npm
 
 we have to pass the object From these 
 
-    ```
+    
     [
         {
             name: "username",
@@ -145,7 +145,7 @@ we have to pass the object From these
             maininputclass: "col-12 col-md-12",
         },
     ];
-    ```
+    
 
 Here you can get the two Components
 - Search Input 
