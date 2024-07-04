@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useRef, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import "./searchoptions"
 
 interface SelectOptionsLabel {
   label: string;
@@ -26,6 +27,7 @@ interface SearchOptionsProps {
   updateText: (enterString: unknown | string) => void;
   isLoading: boolean;
   isReload: () => void;
+  classSearch?: string;
 }
 
 function SearchOptions({
@@ -37,6 +39,7 @@ function SearchOptions({
   selectOptions = [],
   updateText,
   isLoading,
+  classSearch,
   isReload,
 }: SearchOptionsProps) {
   const [selectValue, setSelectValue] = useState("");
@@ -67,7 +70,7 @@ function SearchOptions({
   }, [selectValue]);
   return (
     <div className="position-relative">
-      <div className="input-group rounded-pill border border-1">
+      <div className={`input-group border border-1 ${classSearch?classSearch:'rounded'}`}>
         {btnPlace == "LEFT" && (
           <div className="input-group-item ">
             <button
@@ -132,7 +135,7 @@ function SearchOptions({
       </div>
       {showOptions && (
         <div
-          className="position-absolute rounded mt-2 w-100 bg-light search-options"
+          className="position-absolute rounded mt-2 w-100 bg-white search-options border border-1"
           ref={ref}
         >
           {selectOptions?.length > 0 &&
