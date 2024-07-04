@@ -1,5 +1,5 @@
 
-import * as moment from "moment";
+import moment from "moment";
 import * as React from "react";
 
 interface HeaderOfCalender {
@@ -41,7 +41,7 @@ const CustomHeader = ({
   changeMonth,
   startYear = 1930,
   changeDate,
-  endYear = moment().get("year"),
+  endYear = new Date().getFullYear(),
 }: HeaderOfCalender) => {
   const months = moment.months();
 

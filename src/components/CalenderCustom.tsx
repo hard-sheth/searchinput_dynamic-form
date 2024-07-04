@@ -3,6 +3,7 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import * as React from "react";
 import DatePicker from "react-datepicker";
+import 'moment-timezone';
 
 type CalenderProp = {
   minDate?: Date;
