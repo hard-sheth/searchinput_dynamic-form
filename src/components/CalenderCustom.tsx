@@ -80,7 +80,7 @@ function Calender(props: CalenderProp|any): JSX.Element {
     onChange,
     value,
     error,
-    showTime = true,
+    showTime = false,
     startYear,
     endYear,
     showIcon = true,
@@ -90,7 +90,7 @@ function Calender(props: CalenderProp|any): JSX.Element {
     showBottomTime = false,
     excludeTime = [],
     dateRange = false,
-    multiDateSelect = true,
+    multiDateSelect = false,
     timeBreak = [
       ["10:00", "13:00"],
       ["14:00", "20:00"],
@@ -158,7 +158,7 @@ function Calender(props: CalenderProp|any): JSX.Element {
           ? null
           : value
       }
-      selectedDates={multiDateSelect?value:value}
+      selectedDates={multiDateSelect?value:undefined}
       onChange={(dates: Date | null | [Date | null, Date | null] | Date[]) => {
         onChange(dates);
       }}
@@ -184,7 +184,7 @@ function Calender(props: CalenderProp|any): JSX.Element {
       selectsRange={dateRange?true:undefined}
       endDate={Array.isArray(value) && dateRange ? value[1] : undefined}
       selectsMultiple={multiDateSelect?true:undefined}
-      shouldCloseOnSelect={!dateRange && !multiDateSelect}
+      shouldCloseOnSelect={!dateRange && multiDateSelect}
       disabledKeyboardNavigation
       {...props}
     />

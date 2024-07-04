@@ -1,13 +1,15 @@
 {
   "name": "searchinput_dynamic-form",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx rollup -c"
   },
-  "keywords": [],
+  "keywords": [
+    "dynamic-form","Calender","Search Options","dynamic-Table"
+  ],
   "author": "hard.sheth",
   "license": "ISC",
   "description": "Example where we can create form dynamically with help of bootstrap in react/Nextjs",
