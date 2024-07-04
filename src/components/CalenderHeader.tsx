@@ -1,5 +1,6 @@
 import moment from "moment";
 import * as React from "react";
+import 'moment-timezone';
 
 interface HeaderOfCalender {
   date: Date | undefined;
@@ -40,7 +41,7 @@ const CustomHeader = ({
   changeMonth,
   startYear = 1930,
   changeDate,
-  endYear = new Date().getFullYear(),
+  endYear = moment().get('year'),
 }: HeaderOfCalender) => {
   const months = [
     "January",
@@ -82,7 +83,6 @@ const CustomHeader = ({
         className="form-select"
         value={moment(date).month()}
         onChange={({ target: { value } }) => {
-          console.log(value, "value month");
           if (changeDate) {
             changeDate(value);
           }
@@ -100,7 +100,6 @@ const CustomHeader = ({
         className="form-select"
         value={moment(date).year()}
         onChange={({ target: { value } }) => {
-          console.log(value, "value year");
           changeYear(value);
           if (changeDate) {
             changeDate(value);

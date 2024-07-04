@@ -15,13 +15,11 @@ function DebounceInput(item:any) {
         <input type='number' name='min' className='form-control' onChange={e => {
           const minValue = value1;
           minValue[0] = e.target.value;
-          console.log(minValue, 'minValue');
           item.column.setFilterValue(minValue);
           }} />
         <input type='number' name='max' className='form-control ms-3' onChange={e => {
           const maxValue = value1;
           maxValue[1] = e.target.value;
-          console.log(maxValue, 'maxValue');
           item.column.setFilterValue(maxValue);
           }} />
       </div>}
