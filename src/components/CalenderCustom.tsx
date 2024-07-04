@@ -1,5 +1,5 @@
 import { CustomHeader } from "./CalenderHeader";
-import * as moment from "moment";
+import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import * as React from "react";
 import DatePicker from "react-datepicker";
@@ -16,10 +16,10 @@ type CalenderProp = {
   name?: String;
   onBlur?: any;
   onChange: (event: any) => void;
-  ref: (elm: any) => void;
+  ref?: (elm: any) => void;
   value?: undefined;
   error?: Boolean;
-  showTime: boolean;
+  showTime?: boolean;
   startYear?: number;
   endYear?: number;
   showIcon?: boolean;
@@ -28,10 +28,12 @@ type CalenderProp = {
   timeIntervals?: number;
   showBottomTime?: boolean;
   excludeTime?: [any];
-  timeBreak: string[][];
+  timeBreak?: string[][];
   changeDate?: (event: any) => void;
   dateRange?: boolean;
   multiDateSelect?: boolean;
+  excludeScrollbar?: boolean,
+  onSelect?: (date: Date) => void,
 };
 
 type Holiday = {
@@ -42,13 +44,30 @@ type Holiday = {
 type ParticularDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 /**
- * Description placeholder
+ * React-datepicker update component by prop which should be updated in component.
  *
- * @param {CalenderProp} props
+ * @param {CalenderProp} props//Calnder which can be configured for jsx element.
+ * @param {Date} props.minDate //minimum date where which should be selected.
+ * @param {Date} props.maxDate //maximum date which can be selected.
+ * @param {Date} props.holidays //These holiday related calender. With date & it's name.
+ * @param {[ParticularDay]} props.removeParticularDays //Day of week where which can't be selected. If weekendOff on/true than these will won't work.
+ * @param {[ParticularDay]} props.particlarDayTimes //Day of week where which can be time select can be changed.
+ * @param {String[][]} props.removeParticularDaysTime //On particular day of week what kind of time should be applied.
+ * @param {Boolean} props.weekendOff //On these where we can't select saturday & sunday (weekends).
+ * @param {Number} props.timeIntervals //timeinterval which can be interval for time select.
+ * @param {Boolean} props.dateRange //It should be date range in the Calender. From start date & end date all between those date will be covered.
+ * @param {Boolean} props.multiDateSelect //It can select multiple date. When we select multiple date which can be non related with each other.
+ * @param {Boolean} props.showTime //Which can showtime when it comes true than it can select the time.
+ * @param {Number} props.startYear //It shows/should be start of the year in the calender which can be started in the dropdown of year.
+ * @param {Number} props.endYear //End option of select which can be listed in select.
+ * @param {String[][]} props.timeBreak //On every day where we can have list of start time & end time an array. When start time & end time which can be used for can select those time betweem them.
+ * @param {*} props.excludeTime //In the exclude time in those selected time which can't be select.
+ * @param {Boolean} props.showIcon //should show icon true or false.
+ * 
  * @returns {JSX.Element}
  */
 
-function Calender(props: CalenderProp) {
+function Calender(props: CalenderProp|any): JSX.Element {
   const {
     maxDate,
     minDate,
@@ -99,20 +118,9 @@ function Calender(props: CalenderProp) {
     timeBreakArray.forEach((timeRange: Array<string>) => {
       const startTime = moment(timeRange[0], "HH:mm");
       const endTime = moment(timeRange[1], "HH:mm");
-      console.log(
-        startTime.format("d/MM/YYYY h:mm"),
-        `startTime endTime`,
-        endTime.format("d/MM/YYYY h:mm"),
-        startTime.isBefore(endTime),
-        `startTime.isBefore(endTime)`,
-        timeIntervalArray
-      );
-
       while (startTime.isBefore(endTime)) {
         timeIntervalArray.push(startTime.format("HH:mm"));
-        console.log(startTime.format("HH:mm"), 1);
         startTime.add(timeIntervals, "minutes");
-        console.log(startTime.format("HH:mm"), 2);
       }
     });
 
@@ -178,6 +186,7 @@ function Calender(props: CalenderProp) {
       selectsMultiple={multiDateSelect?true:undefined}
       shouldCloseOnSelect={!dateRange && !multiDateSelect}
       disabledKeyboardNavigation
+      {...props}
     />
   );
 }

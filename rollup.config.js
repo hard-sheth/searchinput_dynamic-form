@@ -19,6 +19,8 @@ export default defineConfig({
     "react-loading", 
     "react-hook-form", 
     "react-icons",
+    "react-datepicker",
+    "moment",
   ],
   plugins: [typescript({ tsconfig: "tsconfig.json" })],
 });

@@ -7,6 +7,7 @@
     "declarationDir": "dist",
     "strict": true,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "react-loading": ["node_modules/react-loading"]
