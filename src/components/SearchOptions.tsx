@@ -22,7 +22,7 @@ interface SearchOptionsProps {
   btnText: JSX.Element;
   startSearch?: "click" | "type";
   optionNullMsg?: JSX.Element;
-  selectOptions: [SelectOptionsLabel] | [SelectOptionsLbl]| [];
+  selectOptions: SelectOptionsLabel[] | SelectOptionsLbl[]| [];
   updateText: (enterString: unknown | string) => void;
   isLoading: boolean;
   isReload: () => void;

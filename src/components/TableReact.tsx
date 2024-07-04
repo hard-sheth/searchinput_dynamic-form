@@ -12,7 +12,7 @@ import * as React from "react";
 import DebounceInput from "./DebounceInput";
 
 type dynamicTableProp = {
-  data: [] | [Object] | any;
+  data: [] | Object[] | any;
   columns: ColumnDef<any>[];
   filter: Boolean;
   sorting: Boolean;

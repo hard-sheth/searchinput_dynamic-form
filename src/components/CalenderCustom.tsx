@@ -8,10 +8,10 @@ import 'moment-timezone';
 type CalenderProp = {
   minDate?: Date;
   maxDate?: Date;
-  holidays?: [Holiday];
+  holidays?: Holiday[];
   icons?: JSX.Element;
-  removeParticularDays?: [ParticularDay];
-  particlarDayTimes?: [ParticularDay];
+  removeParticularDays?: ParticularDay[];
+  particlarDayTimes?: ParticularDay[];
   removeParticularDaysTime?: string[][];
   weekendOff: Boolean;
   name?: String;
@@ -28,7 +28,7 @@ type CalenderProp = {
   dateFormat?: string;
   timeIntervals?: number;
   showBottomTime?: boolean;
-  excludeTime?: [any];
+  excludeTime?: any[];
   timeBreak?: string[][];
   changeDate?: (event: any) => void;
   dateRange?: boolean;
