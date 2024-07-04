@@ -1,4 +1,3 @@
-
 import moment from "moment";
 import * as React from "react";
 
@@ -28,7 +27,7 @@ interface HeaderOfCalender {
  * @param {(date: any) => void} param0.changeMonth
  * @param {number} [param0.startYear=1930]
  * @param {(date: any) => void} param0.changeDate
- * @param {number} [param0.endYear=moment().get("year")]
+ * @param {number} [param0.endYear=new Date().getFullYear()]
  * @returns {*}
  */
 const CustomHeader = ({
@@ -43,7 +42,20 @@ const CustomHeader = ({
   changeDate,
   endYear = new Date().getFullYear(),
 }: HeaderOfCalender) => {
-  const months = moment.months();
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const years = [];
 
@@ -118,4 +130,4 @@ const CustomHeader = ({
   );
 };
 
-export {CustomHeader};
+export { CustomHeader };
