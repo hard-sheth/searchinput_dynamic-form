@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useRef, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
-import "./searchoptions"
 
 interface SelectOptionsLabel {
   label: string;
@@ -135,7 +134,11 @@ function SearchOptions({
       </div>
       {showOptions && (
         <div
-          className="position-absolute rounded mt-2 w-100 bg-white search-options border border-1"
+          className="position-absolute rounded mt-2 w-100 bg-white border border-1"
+          style={{
+            overflowY:'auto',
+            maxHeight:'250px'
+          }}
           ref={ref}
         >
           {selectOptions?.length > 0 &&

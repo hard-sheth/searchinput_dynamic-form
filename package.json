@@ -1,6 +1,6 @@
 {
   "name": "searchinput_dynamic-form",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,6 @@
   },
   "keywords": [
     "dynamic-form",
-    "Calender",
     "Search Options",
     "dynamic-Table"
   ],
@@ -40,11 +39,14 @@
     "axios": "^1.7.2",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
-    "react-datepicker": "^7.2.0",
     "react-hook-form": "^7.52.0",
     "react-icons": "^5.2.1",
     "react-loading": "^2.0.3",
     "react-paginate": "^8.2.0",
     "react-select": "^5.8.0"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

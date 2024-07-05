@@ -13,13 +13,13 @@ type CalenderProp = {
   removeParticularDays?: ParticularDay[];
   particlarDayTimes?: ParticularDay[];
   removeParticularDaysTime?: string[][];
-  weekendOff: Boolean;
-  name?: String;
+  weekendOff: boolean;
+  name?: string;
   onBlur?: any;
   onChange: (event: any) => void;
   ref?: (elm: any) => void;
   value?: undefined;
-  error?: Boolean;
+  error?: boolean;
   showTime?: boolean;
   startYear?: number;
   endYear?: number;
@@ -114,7 +114,7 @@ function Calender(props: CalenderProp|any): JSX.Element {
   };
 
   const getTimeIntervalArray = (timeBreakArray: string[][]) => {
-    const timeIntervalArray: any = [];
+    const timeIntervalArray: string[] = [];
 
     timeBreakArray.forEach((timeRange: Array<string>) => {
       const startTime = moment(timeRange[0], "HH:mm");
@@ -128,7 +128,7 @@ function Calender(props: CalenderProp|any): JSX.Element {
     return timeIntervalArray;
   };
 
-  const filterPassedTime = (time: any) => {
+  const filterPassedTime = (time: Date) => {
     const momentselectedDate = moment(time).format("H:mm");
     const weekDay = moment(time).weekday() as ParticularDay;
     if (removeParticularDaysTime) {
