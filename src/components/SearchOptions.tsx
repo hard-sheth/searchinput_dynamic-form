@@ -11,11 +11,6 @@ interface SelectOptionsLbl extends SelectOptionsLabel {
   options?: SelectOptionsLabel[];
 }
 
-type PropsType = {
-  searchPromise: () => void;
-  onClick?: () => void;
-};
-
 interface SearchOptionsProps {
   loadingText?: string;
   btnPlace?: "RIGHT" | "LEFT";

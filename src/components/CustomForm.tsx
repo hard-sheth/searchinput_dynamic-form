@@ -9,29 +9,7 @@ import DependantDropdown from "./DependantDropdown";
 import { AiOutlineClear } from "react-icons/ai";
 import { BsFloppy } from "react-icons/bs";
 
-export type Inputfields = {
-  type:
-    | "text"
-    | "search"
-    | "textarea"
-    | "checkbox"
-    | "radio"
-    | "number"
-    | "float"
-    | "telephone"
-    | "password"
-    | "email"
-    | "searchoption"
-    | "select"
-    | "dependabledropdown"
-    | "arrayform"
-    | "secure"
-    | "date"
-    | "datetime"
-    | "time"
-    | "daterange"
-    | "datetimerange"
-    | "switch";
+type Inputfields = {
   lable?: string | JSX.Element;
   lableClass?: string;
   placeholder?: string;
@@ -48,43 +26,92 @@ export type Inputfields = {
   somemsg?: string | JSX.Element;
 };
 
-export type RadioFields = {
+type InputOptionList = Inputfields & {
+  type:
+    | "text"
+    | "search"
+    | "textarea"
+    | "number"
+    | "float"
+    | "telephone"
+    | "password"
+    | "email"
+    | "searchoption"
+    | "arrayform"
+    | "secure"
+    | "switch";
+};
+
+type RadioFields = Inputfields & {
   type: "radio";
   placeForLabel: "inline" | "new line";
-  options: [SelectOptions];
-} & Inputfields;
+  radioOptions: SelectOptions[];
+};
 
-type SelectField = {
+type CheckboxFields = Inputfields & {
+  type: "checkbox";
+  options: [CheckBoxOptions];
+};
+
+type SelectAsync = Inputfields & {
   type: "select";
-  options: string | SelectOptions[];
+  options: SelectOptions[];
   defaultvalue?: string | SelectOptions;
   isMulti: boolean;
   maxOptions: number;
   inputchange?: (data: string) => {};
-} & Inputfields;
-
-type SelectAsync = {
   url: string;
   createable?: boolean;
-  optionPromise: Promise<SelectOptions[]>;
-} & SelectField;
+  optionPromise: () => void;
+  // Promise<SelectOptions[]>
+};
 
-type SelectDependable = {
+type SelectDependable = Inputfields & {
   type: "dependabledropdown";
   url?: string;
   previousSelect: string;
-} & SelectAsync;
+  options: SelectOptions[];
+  isMulti: boolean;
+  maxOptions: number;
+  inputchange?: (data: string) => {};
+  optionPromise: () => void;
+};
 
 interface SelectOptions {
   label: string;
   value: string;
 }
 
-export type formdetail = [
-  Inputfields | RadioFields | SelectField | SelectAsync | SelectDependable
+interface CheckBoxOptions {
+  label: JSX.Element | string;
+}
+
+type FileTypes = Inputfields & {
+  type: "file";
+  isMulti: boolean;
+  isPreview: boolean;
+  maxFile: number;
+  uploadBtn: JSX.Element | string;
+  accept: string;
+  clearable: boolean;
+};
+
+export type formdetailfull = [
+  | RadioFields
+  | SelectAsync
+  | SelectDependable
+  | CheckboxFields
+  | FileTypes
+  | InputOptionList
 ];
 
-export type inputTypes = Inputfields | RadioFields | SelectField | SelectAsync | SelectDependable;
+export type inputTypesDiff =
+  | RadioFields
+  | SelectAsync
+  | SelectDependable
+  | CheckboxFields
+  | FileTypes
+  | InputOptionList;
 
 type FormInput = {
   submitfn: (params: object) => void;
@@ -93,7 +120,7 @@ type FormInput = {
   formTitle?: string;
   titlePosition?: "start" | "center" | "end";
   titleClass?: string | unknown;
-  formDetails: formdetail;
+  formDetails: inputTypesDiff[];
   formValues: (params: object) => void;
   resetbtn?: boolean;
   btnPosition?: "start" | "center" | "end";
@@ -101,7 +128,7 @@ type FormInput = {
   extendForm?: JSX.Element;
 };
 
-function DynamicForm(props: FormInput) {
+function CustomForm(props: FormInput) {
   const {
     formTitle,
     titlePosition,
@@ -113,7 +140,7 @@ function DynamicForm(props: FormInput) {
     resetbtn,
     btnPosition,
     inputSideClass,
-    extendForm
+    extendForm,
   } = props;
   const {
     control,
@@ -129,7 +156,7 @@ function DynamicForm(props: FormInput) {
 
   formValues(allFormData);
 
-  const selectOptions:any = formDetails.filter((item) => {
+  const selectOptions: any = formDetails.filter((item) => {
     if (item.type == "dependabledropdown") {
       return item;
     }
@@ -173,7 +200,7 @@ function DynamicForm(props: FormInput) {
           onSubmit={handleSubmit(submitfn)}
           className={`${formclass ? formclass : "row row-cols-1"} g-2`}
         >
-          {formDetails.map((item:any, indexOfForm: number) => {
+          {formDetails.map((item: inputTypesDiff, indexOfForm: number) => {
             return (
               <div
                 className={` ${
@@ -187,9 +214,14 @@ function DynamicForm(props: FormInput) {
                       item.lableClass ? item.lableClass : ""
                     }`}
                   >
-                    {item.lable ? item.lable?.split(/\*/)[0] : ""}
+                    {typeof item.lable === "string" && item.lable
+                      ? item.lable?.split(/\*/)[0]
+                      : item.lable}
                     <span className="text-danger">
-                      {item.lable?.split(/\*/)?.length > 1 ? "*" : ""}
+                      {typeof item.lable === "string" &&
+                      item.lable?.split(/\*/)?.length > 1
+                        ? "*"
+                        : ""}
                     </span>
                   </label>
                 )}
@@ -730,7 +762,6 @@ function DynamicForm(props: FormInput) {
                       />
                     </div>
                   )} */}
-
                   {item.type == "radio" && (
                     <div className="col-12">
                       <Controller
@@ -741,36 +772,38 @@ function DynamicForm(props: FormInput) {
                         }}
                         render={({ field }) => (
                           <>
-                            {item.options.map((radioOption:any, index:number) => {
-                              // console.log(radioOption, 'radioOption',field.name);
+                            {item.radioOptions.map(
+                              (radioOption: SelectOptions, index: number) => {
+                                // console.log(radioOption, 'radioOption',field.name);
 
-                              return (
-                                <div
-                                  className={`form-check ${
-                                    item.placeForLabel
-                                      ? "form-check-inline"
-                                      : ""
-                                  }`}
-                                >
-                                  <input
-                                    className={`form-check-input`}
-                                    type="radio"
-                                    // value={`${field.value}`}
-                                    {...field}
-                                    id={radioOption.value}
-                                    onChange={() =>
-                                      setValue(field.name, radioOption.value)
-                                    }
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor={radioOption.value}
+                                return (
+                                  <div
+                                    className={`form-check ${
+                                      item.placeForLabel
+                                        ? "form-check-inline"
+                                        : ""
+                                    }`}
                                   >
-                                    {radioOption.label}
-                                  </label>
-                                </div>
-                              );
-                            })}
+                                    <input
+                                      className={`form-check-input`}
+                                      type="radio"
+                                      // value={`${field.value}`}
+                                      {...field}
+                                      id={`${radioOption.value} radio-${indexOfForm}${index}`}
+                                      onChange={() =>
+                                        setValue(field.name, radioOption.value)
+                                      }
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor={`${radioOption.value} radio-${indexOfForm}${index}`}
+                                    >
+                                      {radioOption.label}
+                                    </label>
+                                  </div>
+                                );
+                              }
+                            )}
                           </>
                         )}
                       />
@@ -795,29 +828,34 @@ function DynamicForm(props: FormInput) {
                         }}
                         render={({ field }) => (
                           <>
-                            {item.options.map((radioOption: any, index:number,) => {
-                              // console.log(radioOption, 'radioOption',field.name);
-                              return (
-                                <div className={`form-check `}>
-                                  <input
-                                    className={`form-check-input`}
-                                    type="checkbox"
-                                    // value={`${field.value}`}
-                                    {...field}
-                                    id={`checkbox${index}`}
-                                    onChange={(e) =>
-                                      setValue(field.name, e.target.checked)
-                                    }
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor={`checkbox${index}`}
-                                  >
-                                    {radioOption.label}
-                                  </label>
-                                </div>
-                              );
-                            })}
+                            {item.options.map(
+                              (
+                                checkboxOption: CheckBoxOptions,
+                                index: number
+                              ) => {
+                                // console.log(checkboxOption, 'checkboxOption',field.name);
+                                return (
+                                  <div className={`form-check `}>
+                                    <input
+                                      className={`form-check-input`}
+                                      type="checkbox"
+                                      // value={`${field.value}`}
+                                      {...field}
+                                      id={`checkbox${index}${indexOfForm}`}
+                                      onChange={(e) =>
+                                        setValue(field.name, e.target.checked)
+                                      }
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor={`checkbox${index}`}
+                                    >
+                                      {checkboxOption.label}
+                                    </label>
+                                  </div>
+                                );
+                              }
+                            )}
                           </>
                         )}
                       />
@@ -846,7 +884,7 @@ function DynamicForm(props: FormInput) {
                               options={item.options}
                               isClearable
                               onInputChange={
-                                item.inputchange ? item.inputchange : () => {}
+                                item.inputchange ? item.inputchange : undefined
                               }
                               // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
                             />
@@ -934,6 +972,20 @@ function DynamicForm(props: FormInput) {
                       )}
                     </div>
                   )}
+                  {item.type == "file" && (
+                    <div className="col-12 col-md-12">
+                      (
+                      <Controller
+                        name={item.name}
+                        control={control}
+                        rules={{
+                          ...item.validationobj,
+                        }}
+                        render={({ field }) => <input type="file" />}
+                      />
+                      )
+                    </div>
+                  )}
 
                   {errors[item.name] &&
                     item.type !== "password" &&
@@ -964,8 +1016,8 @@ function DynamicForm(props: FormInput) {
             } `}
           >
             <button type="submit" className="btn btn-primary me-2">
-            <i className="me-2">
-                <BsFloppy  />
+              <i className="me-2">
+                <BsFloppy />
               </i>
               Submit
             </button>
@@ -974,11 +1026,13 @@ function DynamicForm(props: FormInput) {
                 type="reset"
                 className="ms-2 btn btn-danger"
                 onClick={() => {
-                  const dropDowns = formDetails.filter((item: Inputfields) => {
-                    if (item.type === "select") {
-                      return item;
+                  const dropDowns = formDetails.filter(
+                    (item: inputTypesDiff) => {
+                      if (item.type === "select") {
+                        return item;
+                      }
                     }
-                  });
+                  );
 
                   if (dropDowns.length > 0) {
                     for (const dropItem of dropDowns) {
@@ -987,7 +1041,7 @@ function DynamicForm(props: FormInput) {
                   }
 
                   const textAreaList = formDetails.filter(
-                    (item: Inputfields) => {
+                    (item: inputTypesDiff) => {
                       if (item.type === "textarea") {
                         return item;
                       }
@@ -1003,9 +1057,9 @@ function DynamicForm(props: FormInput) {
                   reset();
                 }}
               >
-                 <i className="me-2">
+                <i className="me-2">
                   <AiOutlineClear />
-                  </i>
+                </i>
                 Reset
               </button>
             )}
@@ -1016,4 +1070,4 @@ function DynamicForm(props: FormInput) {
   );
 }
 
-export { DynamicForm };
+export { CustomForm };
