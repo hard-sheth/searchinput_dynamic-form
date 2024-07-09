@@ -176,6 +176,25 @@ function CustomForm(props: FormInput) {
     }
   }, [previousData]);
 
+  function handleDragOver(event: any,) {
+    console.log(event, "handleDragOver");
+    event.preventDefault();
+    // const files = event.dataTransfer.files;
+  }
+
+  function handleDrop(event: React.DragEvent,propertyName:string) {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    setValue(propertyName,files)
+    console.log(files, "handleDrop", event.dataTransfer);
+    // // Process the dropped files
+    for (let i = 0; i < files.length; i++) {
+      console.log(files[i].name);
+      const preview = URL.createObjectURL(files[i])
+      console.log(preview,'previewURL');      
+    }
+  }
+
   return (
     <div>
       <div className="row">
@@ -972,8 +991,9 @@ function CustomForm(props: FormInput) {
                       )}
                     </div>
                   )}
-                  {item.type == "file" && (
-                    <div className="col-12 col-md-12">
+                  {item.type == "file" && item.isPreview && (
+                    <div className="col-12 col-md-12"  onDragOver={handleDragOver}
+                    onDrop={(eve)=>handleDrop(eve,item.name)}>
                       (
                       <Controller
                         name={item.name}
@@ -981,7 +1001,19 @@ function CustomForm(props: FormInput) {
                         rules={{
                           ...item.validationobj,
                         }}
-                        render={({ field }) => <input type="file" />}
+                        render={({ field }) => (
+                          <input
+                            type="file"
+                            multiple={item.isMulti}
+                            {...field}
+                            accept={item.accept}
+                            className={`${
+                              errors[item.name] ? "is-invalid" : ""
+                            } ${
+                              item.classinput ? item.classinput : "form-control"
+                            }`}
+                          />
+                        )}
                       />
                       )
                     </div>
