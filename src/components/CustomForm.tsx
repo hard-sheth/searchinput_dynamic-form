@@ -8,6 +8,7 @@ import AsyncSelect from "react-select/async";
 import DependantDropdown from "./DependantDropdown";
 import { AiOutlineClear } from "react-icons/ai";
 import { BsFloppy } from "react-icons/bs";
+import { FileBifercation } from "./FileBifercation";
 
 type Inputfields = {
   lable?: string | JSX.Element;
@@ -90,7 +91,7 @@ type FileTypes = Inputfields & {
   type: "file";
   isMulti: boolean;
   isPreview: boolean;
-  maxFile: number;
+  maxFile?: number;
   uploadBtn: JSX.Element | string;
   accept: string;
   clearable: boolean;
@@ -195,6 +196,10 @@ function CustomForm(props: FormInput) {
     }
   }
 
+  function updateFileForm(propertyname: string,valueFile:any){
+    setValue(propertyname,valueFile)
+  }
+  
   return (
     <div>
       <div className="row">
@@ -991,10 +996,14 @@ function CustomForm(props: FormInput) {
                       )}
                     </div>
                   )}
-                  {item.type == "file" && item.isPreview && (
+                  {item.type == "file" && (
                     <div className="col-12 col-md-12"  onDragOver={handleDragOver}
                     onDrop={(eve)=>handleDrop(eve,item.name)}>
-                      (
+                      {
+                        item.isPreview && allFormData[item.name] && (
+                          <FileBifercation UpdteValue={updateFileForm} PropertyName={item.name} clearable={true} SortCategory={allFormData[item.name]} />
+                        )
+                      }
                       <Controller
                         name={item.name}
                         control={control}
@@ -1015,7 +1024,6 @@ function CustomForm(props: FormInput) {
                           />
                         )}
                       />
-                      )
                     </div>
                   )}
 

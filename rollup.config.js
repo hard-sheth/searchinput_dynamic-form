@@ -19,6 +19,7 @@ export default defineConfig({
     "react-loading", 
     "react-hook-form", 
     "react-icons",
+    "react-paginate",
     "moment",
   ],
   plugins: [typescript({ tsconfig: "tsconfig.json" })],
