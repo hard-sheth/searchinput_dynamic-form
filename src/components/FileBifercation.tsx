@@ -56,14 +56,10 @@ export function FileBifercation({
       setMyFiles(update);
     };
     useEffect(() => {
-      return () => {
-        if (UpdteValue) {
-          UpdteValue(PropertyName, myFiles);
-        }
-      };
+      if (UpdteValue) {
+        UpdteValue(PropertyName, myFiles);
+      }
     }, [myFiles]);
-
-    console.log(myFiles,'myFiles');    
 
     return (
       <div className="row mx-auto row-cols-1 row-cols-md-6 gap-3 mb-2">
@@ -123,16 +119,21 @@ export function FileBifercation({
                   key={index}
                 />
               )}
-              {extension && mp4Extensions.includes(extension) && (
-                <DocCard
-                  fileNameDisplay={fileNameDisplay}
-                  index={index}
-                  clear={clearable}
-                  link={`${blobUrl}`}
-                  removeCard={updateRemovable}
-                  key={index}
-                />
-              )}
+              {extension &&
+                !picExtensions.includes(extension) &&
+                !pdfExtensions.includes(extension) &&
+                !zipExtensions.includes(extension) &&
+                !mp3Extensions.includes(extension) &&
+                !mp4Extensions.includes(extension) && (
+                  <DocCard
+                    fileNameDisplay={fileNameDisplay}
+                    index={index}
+                    clear={clearable}
+                    link={`${blobUrl}`}
+                    removeCard={updateRemovable}
+                    key={index}
+                  />
+                )}
             </div>
           );
         })}

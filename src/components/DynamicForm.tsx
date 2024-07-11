@@ -742,8 +742,6 @@ function DynamicForm(props: FormInput) {
                         render={({ field }) => (
                           <>
                             {item.options.map((radioOption:any, index:number) => {
-                              // console.log(radioOption, 'radioOption',field.name);
-
                               return (
                                 <div
                                   className={`form-check ${
@@ -796,7 +794,6 @@ function DynamicForm(props: FormInput) {
                         render={({ field }) => (
                           <>
                             {item.options.map((radioOption: any, index:number,) => {
-                              // console.log(radioOption, 'radioOption',field.name);
                               return (
                                 <div className={`form-check `}>
                                   <input

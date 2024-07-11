@@ -9,6 +9,7 @@ import DependantDropdown from "./DependantDropdown";
 import { AiOutlineClear } from "react-icons/ai";
 import { BsFloppy } from "react-icons/bs";
 import { FileBifercation } from "./FileBifercation";
+import { IoMdCloudUpload } from "react-icons/io";
 
 type Inputfields = {
   lable?: string | JSX.Element;
@@ -95,6 +96,7 @@ type FileTypes = Inputfields & {
   uploadBtn: JSX.Element | string;
   accept: string;
   clearable: boolean;
+  square: boolean;
 };
 
 export type formdetailfull = [
@@ -177,29 +179,29 @@ function CustomForm(props: FormInput) {
     }
   }, [previousData]);
 
-  function handleDragOver(event: any,) {
-    console.log(event, "handleDragOver");
-    event.preventDefault();
-    // const files = event.dataTransfer.files;
-  }
-
-  function handleDrop(event: React.DragEvent,propertyName:string) {
+  function handleDragOver(event: any) {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    setValue(propertyName,files)
-    console.log(files, "handleDrop", event.dataTransfer);
-    // // Process the dropped files
-    for (let i = 0; i < files.length; i++) {
-      console.log(files[i].name);
-      const preview = URL.createObjectURL(files[i])
-      console.log(preview,'previewURL');      
-    }
+    console.log(handleDragOver,'handleDragOver');    
   }
 
-  function updateFileForm(propertyname: string,valueFile:any){
-    setValue(propertyname,valueFile)
+  function handleDrop(event: React.DragEvent, propertyName: string) {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    setValue(propertyName, files);
   }
-  
+
+  function updateFileForm(propertyname: string, valueFile: any) {
+    setValue(propertyname, valueFile);
+  }
+
+  function fileUploadEvent(
+    event: React.ChangeEvent<HTMLInputElement>,
+    propertyname: string
+  ) {
+    setValue(propertyname, event.target.files);
+  }
+
   return (
     <div>
       <div className="row">
@@ -798,9 +800,7 @@ function CustomForm(props: FormInput) {
                           <>
                             {item.radioOptions.map(
                               (radioOption: SelectOptions, index: number) => {
-                                // console.log(radioOption, 'radioOption',field.name);
-
-                                return (
+                              return (
                                   <div
                                     className={`form-check ${
                                       item.placeForLabel
@@ -857,7 +857,6 @@ function CustomForm(props: FormInput) {
                                 checkboxOption: CheckBoxOptions,
                                 index: number
                               ) => {
-                                // console.log(checkboxOption, 'checkboxOption',field.name);
                                 return (
                                   <div className={`form-check `}>
                                     <input
@@ -997,33 +996,82 @@ function CustomForm(props: FormInput) {
                     </div>
                   )}
                   {item.type == "file" && (
-                    <div className="col-12 col-md-12"  onDragOver={handleDragOver}
-                    onDrop={(eve)=>handleDrop(eve,item.name)}>
-                      {
-                        item.isPreview && allFormData[item.name] && (
-                          <FileBifercation UpdteValue={updateFileForm} PropertyName={item.name} clearable={true} SortCategory={allFormData[item.name]} />
-                        )
-                      }
-                      <Controller
-                        name={item.name}
-                        control={control}
-                        rules={{
-                          ...item.validationobj,
-                        }}
-                        render={({ field }) => (
-                          <input
-                            type="file"
-                            multiple={item.isMulti}
-                            {...field}
-                            accept={item.accept}
-                            className={`${
-                              errors[item.name] ? "is-invalid" : ""
-                            } ${
-                              item.classinput ? item.classinput : "form-control"
-                            }`}
+                    <div
+                      className="col-12 col-md-12"
+                      onDragOver={handleDragOver}
+                      onDrop={(eve) => handleDrop(eve, item.name)}
+                    >
+                      {item.isPreview &&
+                        allFormData[item.name] &&
+                        !item.square && (
+                          <FileBifercation
+                            UpdteValue={updateFileForm}
+                            PropertyName={item.name}
+                            clearable={true}
+                            SortCategory={allFormData[item.name]}
                           />
                         )}
-                      />
+                      {(!allFormData[item.name] ||
+                        allFormData[item.name]?.length == 0) &&
+                        !item.square && (
+                          <Controller
+                            name={item.name}
+                            control={control}
+                            rules={{
+                              ...item.validationobj,
+                            }}
+                            render={({ field }) => (
+                              <input
+                                type="file"
+                                multiple={item.isMulti}
+                                // {...field}
+                                onChange={(eve) =>
+                                  fileUploadEvent(eve, field.name)
+                                }
+                                accept={item.accept}
+                                className={`${
+                                  errors[item.name] ? "is-invalid" : ""
+                                } ${
+                                  item.classinput
+                                    ? item.classinput
+                                    : "form-control"
+                                }`}
+                              />
+                            )}
+                          />
+                        )}
+                      {item.square && (
+                        <>
+                          {item.isPreview && allFormData[item.name] && (
+                            <FileBifercation
+                              UpdteValue={updateFileForm}
+                              PropertyName={item.name}
+                              clearable={true}
+                              SortCategory={allFormData[item.name]}
+                            />
+                          )}
+                          {(!allFormData[item.name] ||
+                            allFormData[item.name]?.length == 0) && (
+                            <div className={`border-dashed rounded text-center border-secondary ${item.classinput?item.classinput:''}`}>
+                              <label className="w-100 py-3" htmlFor={`file-input${indexOfForm}`}>
+                              <IoMdCloudUpload size={150} color="#006FAC" />
+                              <p >
+                                Drag & drop your files here
+                              </p>
+                              </label>
+                              <input
+                                type="file"
+                                hidden
+                                accept={item.accept}
+                                onChange={(eve) =>
+                                  fileUploadEvent(eve, item.name)
+                                }
+                                id={`file-input${indexOfForm}`}
+                              />
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   )}
 
