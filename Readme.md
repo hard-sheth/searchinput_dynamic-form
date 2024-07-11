@@ -490,14 +490,13 @@ function App() {
       options: [
         {
           label: (
-            <>
-              {" "}
-              I certify that I am at least 18 years old and that i agree to the{" "}
-              <Link href={`/terms`}>Terms & Condition</Link> and{" "}
+            <>              
+              I certify that I am at least 18 years old and that i agree to the
+              <Link href={`/terms`}>Terms & Condition</Link> and
               <span className="text-primary border-bottom border-primary">
                 Privacy Policy
               </span>
-              . This service is for the India only.{" "}
+              . This service is for the India only.
             </>
           ),
         },
