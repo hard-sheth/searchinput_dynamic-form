@@ -442,3 +442,94 @@ function App() {
   )
 }
 ```
+
+
+#### CustomForm
+
+```typescript
+import { CustomForm } from "searchinput_dynamic-form";
+import {  useState } from "react";
+
+function App() {
+    const createForm: inputTypesDiff[] = [
+    {
+      name: "username",
+      type: "text",
+      placeholder: "Please enter your email or username.",
+      lable: "Full Name *",
+      validationobj: {
+        required: {
+          value: true,
+          message: "Please Enter Full Name.",
+        },
+      },
+      maininputclass: "col-12 col-md-12",
+    },
+    {
+      type: "radio",
+      name: "gender",
+      lable: "Gender *",
+      radioOptions: [
+        { label: `Male`, value: "male" },
+        { label: `Female`, value: "female" },
+        { label: `Other`, value: "other" },
+      ],
+      placeForLabel: "inline",
+      classinput: "col-12",
+      maininputclass: "col-12 col-md-12",
+      validationobj: {
+        required: {
+          value: true,
+          message: `Please Select Gender.`,
+        },
+      },
+    },
+    {
+      name: "agree",
+      type: "checkbox",
+      options: [
+        {
+          label: (
+            <>
+              {" "}
+              I certify that I am at least 18 years old and that i agree to the{" "}
+              <Link href={`/terms`}>Terms & Condition</Link> and{" "}
+              <span className="text-primary border-bottom border-primary">
+                Privacy Policy
+              </span>
+              . This service is for the India only.{" "}
+            </>
+          ),
+        },
+      ],
+      maininputclass: "col-12 col-md-12",
+    },
+    {
+      type: "file",
+      accept: "image/png",
+      clearable: true,
+      isMulti: true,
+      isPreview: true,
+      name: "fileupload",
+      uploadBtn: 'Upload btn',
+      maininputclass: "col-12 col-md-12",
+      square: true,
+    },
+  ];
+  const formValue = (data: object) => {
+      console.log(data,'data form');
+    };
+  const formvaluessubmit = (data: object) => {
+      console.log(data, "form app");
+    };
+  return  <CustomForm
+        formValues={formValue}
+        titlePosition="center"
+        formDetails={createForm}
+        formclass={`row row-cols-1 row-cols-md-2`}
+        submitfn={formvaluessubmit}
+        btnPosition="center"
+        resetbtn={true}
+      />
+}
+```
