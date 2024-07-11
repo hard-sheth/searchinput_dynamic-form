@@ -321,24 +321,6 @@ function App() {
 }
 ```
 
-#### DynamicForm
-
-```typescript
-import { DynamicForm } from "searchinput_dynamic-form";
-import {  useState } from "react";
-
-function App() {
-  const [selectValue, setSelectValue] = useState("");
-  const formValue = (data: object) => {
-      console.log(data,'data form');
-    };
-  const formvaluessubmit = (data: object) => {
-      console.log(data, "form app");
-    };
-  return <DynamicForm         formValues={formValue} formTitle={'Login Form'} titlePosition="center" formDetails={createForm}  formclass={`row row-cols-1 row-cols-md-2`}  submitfn={formvaluessubmit} />
-}
-```
-
 #### Table
 
 ```typescript
