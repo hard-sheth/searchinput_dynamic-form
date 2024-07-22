@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Select from "react-select";
@@ -11,7 +11,10 @@ import { BsFloppy } from "react-icons/bs";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
 import { MultiItemForm } from "./MultiAddRemove";
-
+import "regenerator-runtime/runtime";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 type Inputfields = {
   lable?: string | JSX.Element;
   lableClass?: string;
@@ -257,6 +260,24 @@ function CustomForm(props: FormInput) {
   }
 
   console.log(arrayName, "arrayName", multiArrayObj, "multiArrayObj");
+  const [record, setRecord] = React.useState(false);
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  const btnPressed = () => {
+    resetTranscript()
+    // toast("btn Pressed");
+    SpeechRecognition.startListening({continuous: true});
+    setRecord(true);
+  };
+  const btnReleased = () => {
+    setRecord(false);
+    SpeechRecognition.stopListening();
+  };
 
   return (
     <div>
@@ -1172,6 +1193,30 @@ function CustomForm(props: FormInput) {
                       </button>
                     </div>
                   )}
+
+                  {item.type === "arrayform" &&
+                     <div className="position-relative">
+                      <Controller
+                            name={item.name}
+                            control={control}
+                            rules={{
+                              ...item.validationobj,
+                            }}
+                            render={({ field }) => (
+                              <input
+                                type="text"
+                                className="form-control rounded-pill py-2"
+                              />
+                            )}
+                          />
+                     <div className="position-absolute end-0 top-0 bottom-0"    onMouseDown={btnPressed}
+                       onMouseUp={btnReleased}>
+                       <button type="button" className="btn btn-success rounded-circle">
+                         <FaMicrophone />
+                       </button>
+                     </div>
+                   </div>
+                  }
 
                   {errors[item.name] &&
                     item.type !== "password" &&

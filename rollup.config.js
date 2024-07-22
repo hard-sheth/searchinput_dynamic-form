@@ -21,6 +21,7 @@ export default defineConfig({
     "react-icons",
     "react-paginate",
     "moment",
+    "react-speech-recognition"
   ],
   plugins: [typescript({ tsconfig: "tsconfig.json" })],
 });
