@@ -278,6 +278,11 @@ function CustomForm(props: FormInput) {
     setRecord(false);
     SpeechRecognition.stopListening();
   };
+  React.useEffect(() => {
+    if(record){
+      setValue("voicetext", transcript);
+    }
+  }, [transcript]);
 
   return (
     <div>
@@ -1197,7 +1202,7 @@ function CustomForm(props: FormInput) {
                   {item.type === "arrayform" &&
                      <div className="position-relative">
                       <Controller
-                            name={item.name}
+                            name={'voicetext'}
                             control={control}
                             rules={{
                               ...item.validationobj,
