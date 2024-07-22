@@ -284,6 +284,10 @@ function CustomForm(props: FormInput) {
     }
   }, [transcript]);
 
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
+  }
+  
   return (
     <div>
       <div className="row">
