@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Select from "react-select";
@@ -10,6 +10,7 @@ import { AiOutlineClear } from "react-icons/ai";
 import { BsFloppy } from "react-icons/bs";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
+import { MultiItemForm } from "./MultiAddRemove";
 
 type Inputfields = {
   lable?: string | JSX.Element;
@@ -26,6 +27,7 @@ type Inputfields = {
   name: string;
   defaultvalue?: string;
   somemsg?: string | JSX.Element;
+  value?: any;
 };
 
 type InputOptionList = Inputfields & {
@@ -39,7 +41,6 @@ type InputOptionList = Inputfields & {
     | "password"
     | "email"
     | "searchoption"
-    | "arrayform"
     | "secure"
     | "switch";
 };
@@ -79,12 +80,12 @@ type SelectDependable = Inputfields & {
   optionPromise: () => void;
 };
 
-interface SelectOptions {
+export interface SelectOptions {
   label: string;
   value: string;
 }
 
-interface CheckBoxOptions {
+export interface CheckBoxOptions {
   label: JSX.Element | string;
 }
 
@@ -93,8 +94,8 @@ type FileTypes = Inputfields & {
   isMulti: boolean;
   isPreview: boolean;
   maxFile?: number;
-  uploadBtn: JSX.Element | string;
-  accept: string;
+  uploadBtn?: JSX.Element | string;
+  accept?: string;
   clearable: boolean;
   square: boolean;
 };
@@ -114,6 +115,7 @@ export type inputTypesDiff =
   | SelectDependable
   | CheckboxFields
   | FileTypes
+  | FormArray
   | InputOptionList;
 
 type FormInput = {
@@ -129,6 +131,14 @@ type FormInput = {
   btnPosition?: "start" | "center" | "end";
   inputSideClass?: string;
   extendForm?: JSX.Element;
+  submitFormBtn?: JSX.Element;
+  resetFormBtn?: JSX.Element;
+};
+
+type FormArray = Inputfields & {
+  type: "arrayform";
+  details: inputTypesDiff[];
+  arrayformclass?: string;
 };
 
 function CustomForm(props: FormInput) {
@@ -144,6 +154,8 @@ function CustomForm(props: FormInput) {
     btnPosition,
     inputSideClass,
     extendForm,
+    resetFormBtn,
+    submitFormBtn,
   } = props;
   const {
     control,
@@ -153,20 +165,48 @@ function CustomForm(props: FormInput) {
     handleSubmit,
     reset,
   } = useForm();
+
+  const formArrayDetail = formDetails.filter((item) => {
+    if (item.type === "arrayform") {
+      return item;
+    }
+  });
+
+  let arrayName = "Array";
+
+  let multiArrayObj = {};
+
+  if (formArrayDetail.length > 0 && formArrayDetail[0].type === "arrayform") {
+    arrayName = formArrayDetail[0].name;
+    let updateObj: { [key: string]: any } = {};
+    for (const item of formArrayDetail[0].details) {
+      updateObj[`${item.name}`] = "";
+    }
+    multiArrayObj = updateObj;
+  }
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: arrayName,
+  });
+
   const [showPassword, setShowPassword] = React.useState(false);
 
   const allFormData = watch();
 
   formValues(allFormData);
 
-  const selectOptions: any = formDetails.filter((item) => {
-    if (item.type == "dependabledropdown") {
+  const selectOptions = formDetails.filter((item) => {
+    if (item.type === "dependabledropdown") {
       return item;
     }
   });
 
   let previousData: any;
-  if (selectOptions.length > 0) {
+  if (
+    selectOptions.length > 0 &&
+    selectOptions[0].type === "dependabledropdown"
+  ) {
     previousData = watch(selectOptions[0]?.previousSelect);
   }
 
@@ -179,10 +219,20 @@ function CustomForm(props: FormInput) {
     }
   }, [previousData]);
 
+  React.useEffect(() => {
+    if (formDetails.length > 0) {
+      for (const inputDetails of formDetails) {
+        if (inputDetails.value) {
+          setValue(inputDetails.name, inputDetails.value);
+        }
+      }
+    }
+  }, [formDetails]);
+
   function handleDragOver(event: any) {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    console.log(handleDragOver,'handleDragOver');    
+    console.log(handleDragOver, "handleDragOver");
   }
 
   function handleDrop(event: React.DragEvent, propertyName: string) {
@@ -201,6 +251,12 @@ function CustomForm(props: FormInput) {
   ) {
     setValue(propertyname, event.target.files);
   }
+
+  function formArrayUpdate(indexOfForm:number,propertyname: string, details: object,) {
+    setValue(`${propertyname}.${indexOfForm}`,{...details})
+  }
+
+  console.log(arrayName, "arrayName", multiArrayObj, "multiArrayObj");
 
   return (
     <div>
@@ -233,6 +289,7 @@ function CustomForm(props: FormInput) {
                   item.maininputclass ? item.maininputclass : "col"
                 }`}
                 id={`formInput-${indexOfForm}`}
+                key={indexOfForm}
               >
                 {item.lable && (
                   <label
@@ -433,7 +490,7 @@ function CustomForm(props: FormInput) {
                                     ? item.classinput
                                     : "form-control"
                                 }`}
-                                onKeyDown={(e) => {
+                                onKeyUp={(e) => {
                                   if (
                                     e.key != "ArrowUp" &&
                                     e.key != "ArrowDown" &&
@@ -480,7 +537,7 @@ function CustomForm(props: FormInput) {
                                   ? item.classinput
                                   : "form-control"
                               }`}
-                              onKeyDown={(e) => {
+                              onKeyUp={(e) => {
                                 if (
                                   e.key != "ArrowUp" &&
                                   e.key != "ArrowDown" &&
@@ -533,7 +590,7 @@ function CustomForm(props: FormInput) {
                                     ? item.classinput
                                     : "form-control"
                                 }`}
-                                onKeyDown={(e) => {
+                                onKeyUp={(e) => {
                                   if (
                                     e.key != "ArrowUp" &&
                                     e.key != "ArrowDown" &&
@@ -580,7 +637,7 @@ function CustomForm(props: FormInput) {
                                   ? item.classinput
                                   : "form-control"
                               }`}
-                              onKeyDown={(e) => {
+                              onKeyUp={(e) => {
                                 if (
                                   e.key != "ArrowUp" &&
                                   e.key != "ArrowDown" &&
@@ -764,30 +821,6 @@ function CustomForm(props: FormInput) {
                     </>
                   )}
 
-                  {/* {item.type == "textarea" && (
-                    <div className={`form-control`}>
-                      <Controller
-                        name={item.name}
-                        control={control}
-                        rules={{
-                          ...item.validationobj,
-                        }}
-                        render={({
-                          field: { onChange, onBlur, ref, value },
-                        }) => (
-                          <CKEditor
-                            editor={ClassicEditor}
-                            // data="<p>Hello from CKEditor&nbsp;5!</p>"
-                            data={value}
-                            onChange={(event:any, editor:any) => {
-                              const data = editor.getData();
-                              onChange(data);
-                            }}
-                          />
-                        )}
-                      />
-                    </div>
-                  )} */}
                   {item.type == "radio" && (
                     <div className="col-12">
                       <Controller
@@ -800,13 +833,14 @@ function CustomForm(props: FormInput) {
                           <>
                             {item.radioOptions.map(
                               (radioOption: SelectOptions, index: number) => {
-                              return (
+                                return (
                                   <div
                                     className={`form-check ${
                                       item.placeForLabel
                                         ? "form-check-inline"
                                         : ""
                                     }`}
+                                    key={`radio-${index + 1}`}
                                   >
                                     <input
                                       className={`form-check-input`}
@@ -816,6 +850,10 @@ function CustomForm(props: FormInput) {
                                       id={`${radioOption.value} radio-${indexOfForm}${index}`}
                                       onChange={() =>
                                         setValue(field.name, radioOption.value)
+                                      }
+                                      checked={
+                                        radioOption.value ===
+                                        allFormData[field.name]
                                       }
                                     />
                                     <label
@@ -838,6 +876,7 @@ function CustomForm(props: FormInput) {
                       )}
                     </div>
                   )}
+
                   {item.type == "checkbox" && (
                     <div
                       className={`col-12 ${
@@ -858,7 +897,10 @@ function CustomForm(props: FormInput) {
                                 index: number
                               ) => {
                                 return (
-                                  <div className={`form-check `}>
+                                  <div
+                                    className={`form-check `}
+                                    key={`checkbox-${index + 1}`}
+                                  >
                                     <input
                                       className={`form-check-input`}
                                       type="checkbox"
@@ -868,6 +910,7 @@ function CustomForm(props: FormInput) {
                                       onChange={(e) =>
                                         setValue(field.name, e.target.checked)
                                       }
+                                      checked={allFormData[field.name]}
                                     />
                                     <label
                                       className="form-check-label"
@@ -889,6 +932,7 @@ function CustomForm(props: FormInput) {
                       )}
                     </div>
                   )}
+
                   {item.type == "select" && (
                     <div className="col ">
                       {!item.url && (
@@ -946,6 +990,7 @@ function CustomForm(props: FormInput) {
                       )}
                     </div>
                   )}
+
                   {item.type == "dependabledropdown" && (
                     <div className="col">
                       {!item.url && (
@@ -995,6 +1040,7 @@ function CustomForm(props: FormInput) {
                       )}
                     </div>
                   )}
+
                   {item.type == "file" && (
                     <div
                       className="col-12 col-md-12"
@@ -1007,7 +1053,7 @@ function CustomForm(props: FormInput) {
                           <FileBifercation
                             UpdteValue={updateFileForm}
                             PropertyName={item.name}
-                            clearable={true}
+                            clearable={item.clearable}
                             SortCategory={allFormData[item.name]}
                           />
                         )}
@@ -1046,18 +1092,23 @@ function CustomForm(props: FormInput) {
                             <FileBifercation
                               UpdteValue={updateFileForm}
                               PropertyName={item.name}
-                              clearable={true}
+                              clearable={item.clearable}
                               SortCategory={allFormData[item.name]}
                             />
                           )}
                           {(!allFormData[item.name] ||
                             allFormData[item.name]?.length == 0) && (
-                            <div className={`border-dashed rounded text-center border-secondary ${item.classinput?item.classinput:''}`}>
-                              <label className="w-100 py-3" htmlFor={`file-input${indexOfForm}`}>
-                              <IoMdCloudUpload size={150} color="#006FAC" />
-                              <p >
-                                Drag & drop your files here
-                              </p>
+                            <div
+                              className={`border-dashed rounded text-center border-secondary ${
+                                item.classinput ? item.classinput : ""
+                              }`}
+                            >
+                              <label
+                                className="w-100 py-3"
+                                htmlFor={`file-input${indexOfForm}`}
+                              >
+                                <IoMdCloudUpload size={150} color="#006FAC" />
+                                <p>Drag & drop your files here</p>
                               </label>
                               <input
                                 type="file"
@@ -1075,6 +1126,53 @@ function CustomForm(props: FormInput) {
                     </div>
                   )}
 
+                  {item.type === "arrayform" && (
+                    <div>
+                      <div
+                        className={`${
+                          item.arrayformclass ? item.arrayformclass : `row mb-2`
+                        }`}
+                      >
+                        {fields.map((field, formIndexArray) => {
+                          console.log(
+                            field,
+                            "field",
+                            formIndexArray,
+                            "formIndexArray"
+                          );
+                          return (
+                            //     <p>Lorem ipsum dolor sit amet.</p>
+                            //   )
+
+                            // }
+
+                            // (
+                            <>
+                              <MultiItemForm
+                                key={field.id}
+                                control={control}
+                                update={formArrayUpdate}
+                                index={formIndexArray}
+                                value={field}
+                                details={item.details}
+                                formClass = {item.arrayformclass}
+                                remove= {remove}
+                                propertyName = {item.name}
+                              />
+                            </>
+                          );
+                        })}
+                      </div>
+                      <button
+                        type="button"
+                        className={"btn btn-primary" + ``}
+                        onClick={() => append(multiArrayObj)}
+                      >
+                        <FaPlus /> Add
+                      </button>
+                    </div>
+                  )}
+
                   {errors[item.name] &&
                     item.type !== "password" &&
                     item.type !== "radio" &&
@@ -1083,6 +1181,7 @@ function CustomForm(props: FormInput) {
                         {errors[item.name]?.message as React.ReactNode}
                       </div>
                     )}
+
                   {item.somemsg && (
                     <div className="form-text">{item.somemsg}</div>
                   )}
@@ -1103,16 +1202,21 @@ function CustomForm(props: FormInput) {
                 : "text-center"
             } `}
           >
-            <button type="submit" className="btn btn-primary me-2">
-              <i className="me-2">
-                <BsFloppy />
-              </i>
-              Submit
+            <button type="submit" className="btn btn-outline-primary me-2">
+              {!submitFormBtn && (
+                <>
+                  <i className="me-2">
+                    <BsFloppy />
+                  </i>
+                  Submit
+                </>
+              )}
+              {submitFormBtn && <>{submitFormBtn}</>}
             </button>
-            {resetbtn && (
+            {resetbtn && !resetFormBtn && (
               <button
                 type="reset"
-                className="ms-2 btn btn-danger"
+                className="ms-2 btn btn-outline-danger"
                 onClick={() => {
                   const dropDowns = formDetails.filter(
                     (item: inputTypesDiff) => {
@@ -1145,10 +1249,48 @@ function CustomForm(props: FormInput) {
                   reset();
                 }}
               >
-                <i className="me-2">
+                {/* <i className="me-2">
                   <AiOutlineClear />
-                </i>
+                </i> */}
                 Reset
+              </button>
+            )}
+            {resetbtn && resetFormBtn && (
+              <button
+                type="reset"
+                className="ms-2 btn btn-outline-danger"
+                onClick={() => {
+                  const dropDowns = formDetails.filter(
+                    (item: inputTypesDiff) => {
+                      if (item.type === "select") {
+                        return item;
+                      }
+                    }
+                  );
+
+                  if (dropDowns.length > 0) {
+                    for (const dropItem of dropDowns) {
+                      reset({ [dropItem.name]: "select..." });
+                    }
+                  }
+
+                  const textAreaList = formDetails.filter(
+                    (item: inputTypesDiff) => {
+                      if (item.type === "textarea") {
+                        return item;
+                      }
+                    }
+                  );
+
+                  if (textAreaList.length > 0) {
+                    for (const iterator of textAreaList) {
+                      reset({ [iterator.name]: "<p></p>" });
+                    }
+                  }
+                  reset();
+                }}
+              >
+                {resetFormBtn}
               </button>
             )}
           </div>
