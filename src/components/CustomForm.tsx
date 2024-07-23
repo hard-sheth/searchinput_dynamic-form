@@ -256,10 +256,12 @@ function CustomForm(props: FormInput) {
   }
 
   function formArrayUpdate(indexOfForm:number,propertyname: string, details: object,) {
-    setValue(`${propertyname}.${indexOfForm}`,{...details})
-  }
+    const detailForm = allFormData[propertyname][indexOfForm];
+    const myUpdateValue = { ...detailForm, ...details };
+    setValue(`${propertyname}.${indexOfForm}`, {  ...myUpdateValue });
 
-  console.log(arrayName, "arrayName", multiArrayObj, "multiArrayObj");
+
+  }
   const [record, setRecord] = React.useState(false);
   const {
     transcript,
@@ -309,7 +311,6 @@ function CustomForm(props: FormInput) {
           </h1>
         )}
         <form
-          onSubmit={handleSubmit(submitfn)}
           className={`${formclass ? formclass : "row row-cols-1"} g-2`}
         >
           {formDetails.map((item: inputTypesDiff, indexOfForm: number) => {
@@ -1171,16 +1172,8 @@ function CustomForm(props: FormInput) {
                             "formIndexArray"
                           );
                           return (
-                            //     <p>Lorem ipsum dolor sit amet.</p>
-                            //   )
-
-                            // }
-
-                            // (
-                            <>
                               <MultiItemForm
                                 key={field.id}
-                                control={control}
                                 update={formArrayUpdate}
                                 index={formIndexArray}
                                 value={field}
@@ -1188,8 +1181,8 @@ function CustomForm(props: FormInput) {
                                 formClass = {item.arrayformclass}
                                 remove= {remove}
                                 propertyName = {item.name}
+                                valueofForm ={allFormData[item.name][formIndexArray]}
                               />
-                            </>
                           );
                         })}
                       </div>
@@ -1256,7 +1249,7 @@ function CustomForm(props: FormInput) {
                 : "text-center"
             } `}
           >
-            <button type="submit" className="btn btn-outline-primary me-2">
+            <button type="submit" className="btn btn-outline-primary me-2" onClick={handleSubmit(submitfn)}>
               {!submitFormBtn && (
                 <>
                   <i className="me-2">

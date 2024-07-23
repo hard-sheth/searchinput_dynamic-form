@@ -12,7 +12,6 @@ type ArrayForm = {
   update?: any;
   index: number;
   value: any;
-  control: any;
   details: inputTypesDiff[];
   formClass?: string;
   remove: any;
@@ -24,18 +23,14 @@ function MultiItemForm({
   update,
   index,
   value,
-  control,
   details,
   formClass,
   remove,
   propertyName,
   valueofForm
 }: ArrayForm) {
-  console.log("control", value, "value", index, "index", control[index], 'index control',);
-
   const {
-    register,
-    handleSubmit,
+    control,
     formState: { errors },
     setValue,
   } = useForm({
@@ -50,40 +45,42 @@ function MultiItemForm({
     console.log(handleDragOver, "handleDragOver");
   }
 
-  function handleDrop(event: React.DragEvent, propertyName: string) {
+  function handleDrop(event: React.DragEvent, prop__name: string) {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    setValue(propertyName, files);
-    update(index, { propertyName: files });
+    setValue(prop__name, files);
+    update(index, propertyName, { [prop__name]: files });
   }
 
   function fileUploadEvent(
     event: React.ChangeEvent<HTMLInputElement>,
-    propertyname: string
+    prop__name: string
   ) {
-    setValue(propertyname, event.target.files);
-    update(index, { propertyname: event.target.files });
+    setValue(prop__name, event.target.files);
+    update(index, propertyName, { [prop__name]: event.target.files });
   }
 
-  function updateFileForm(propertyname: string, valueFile: any) {
-    setValue(propertyname, valueFile);
-    update(index, { [propertyname]: valueFile });
+  function updateFileForm(prop__name: string, valueFile: any) {
+    setValue(prop__name, valueFile);
+    update(index, propertyName, { [prop__name]: valueFile });
   }
 
   const myEntrerObjName = Object.keys(value);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value:eventvalue } = event.target;
-    console.log(name, 'name', eventvalue, 'eventvalue', value);    
-    update(index, propertyName, { ...value, [name]: eventvalue }); // Update the field in the array in real-time
+    update(index, propertyName, { [name]: eventvalue }); // Update the field in the array in real-time
   };
 
-  for (const formThing of Object.entries(valueofForm)) {
-    setValue(formThing[0],formThing[1])
+
+  if (Object.keys(valueofForm).length > 0) {
+    for (const formThing of Object.entries(valueofForm)) {
+      setValue(formThing[0], formThing[1]);
+    }
   }
 
   return (
-    <div className={`row position-relative py-3 ${formClass}`}>
+    <div className={`row position-relative py-3 ${formClass}`} >
       {details.map((item, indexOfForm: number) => {
         return (
           <div
@@ -475,6 +472,7 @@ function MultiItemForm({
                         placeholder={`${
                           item.placeholder ? item.placeholder : ""
                         }`}
+                        onChange={handleInputChange}
                       />
                     )}
                     {showPassword && (
@@ -487,6 +485,7 @@ function MultiItemForm({
                         placeholder={`${
                           item.placeholder ? item.placeholder : ""
                         }`}
+                        onChange={handleInputChange}
                       />
                     )}
                     {!showPassword && (
@@ -544,6 +543,7 @@ function MultiItemForm({
                             } ${
                               item.classinput ? item.classinput : "form-control"
                             }`}
+                            onChange={handleInputChange}
                             placeholder={`${
                               item.placeholder ? item.placeholder : ""
                             }`}
@@ -587,6 +587,7 @@ function MultiItemForm({
                           placeholder={`${
                             item.placeholder ? item.placeholder : ""
                           }`}
+                          onChange={handleInputChange}
                         />
                         {errors[item.name] && (
                           <div className="invalid-feedback">
@@ -628,8 +629,7 @@ function MultiItemForm({
                                 onChange={() => {
                                   const keyName = item.name;
                                   const keyValue = radioOption.value;
-                                  update(index, { [keyName]: keyValue });
-                                  // setValue(field.name, radioOption.value)
+                                  update(index, propertyName, {[keyName]: keyValue,});
                                 }}
                               />
                               <label
@@ -774,17 +774,12 @@ function MultiItemForm({
                 onDrop={(eve) => handleDrop(eve, item.name)}
               >
                 {item.isPreview && !item.square && (
-                  <p>
-                    {/* {Array.from( */}
-                    {value[item.name]}
-                    {/* )} */}
-                  </p>
-                  // <FileBifercation
-                  //   UpdteValue={updateFileForm}
-                  //   PropertyName={item.name}
-                  //   clearable={item.clearable}
-                  //   SortCategory={value[item.name]}
-                  // />
+                  <FileBifercation
+                    UpdteValue={updateFileForm}
+                    PropertyName={item.name}
+                    clearable={item.clearable}
+                    SortCategory={value[item.name]}
+                  />
                 )}
                 {!item.square && (
                   <Controller
