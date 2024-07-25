@@ -6,15 +6,14 @@ import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import DependantDropdown from "./DependantDropdown";
-import { AiOutlineClear } from "react-icons/ai";
+// import { AiOutlineClear } from "react-icons/ai";
 import { BsFloppy } from "react-icons/bs";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
 import { MultiItemForm } from "./MultiAddRemove";
-import "regenerator-runtime/runtime";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+// import VoiceInput from "./VoiceInput";
+const VoiceInput = React.lazy(() => import('./formInputs/VoiceInput'));
+
 type Inputfields = {
   lable?: string | JSX.Element;
   lableClass?: string;
@@ -83,6 +82,10 @@ type SelectDependable = Inputfields & {
   optionPromise: () => void;
 };
 
+type VoiceText = Inputfields & {
+  type: "voicetext";
+};
+
 export interface SelectOptions {
   label: string;
   value: string;
@@ -119,6 +122,7 @@ export type inputTypesDiff =
   | CheckboxFields
   | FileTypes
   | FormArray
+  | VoiceText
   | InputOptionList;
 
 type FormInput = {
@@ -255,41 +259,16 @@ function CustomForm(props: FormInput) {
     setValue(propertyname, event.target.files);
   }
 
-  function formArrayUpdate(indexOfForm:number,propertyname: string, details: object,) {
+  function formArrayUpdate(
+    indexOfForm: number,
+    propertyname: string,
+    details: object
+  ) {
     const detailForm = allFormData[propertyname][indexOfForm];
     const myUpdateValue = { ...detailForm, ...details };
-    setValue(`${propertyname}.${indexOfForm}`, {  ...myUpdateValue });
-
-
+    setValue(`${propertyname}.${indexOfForm}`, { ...myUpdateValue });
   }
-  const [record, setRecord] = React.useState(false);
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
 
-  const btnPressed = () => {
-    resetTranscript()
-    // toast("btn Pressed");
-    SpeechRecognition.startListening({continuous: true});
-    setRecord(true);
-  };
-  const btnReleased = () => {
-    setRecord(false);
-    SpeechRecognition.stopListening();
-  };
-  React.useEffect(() => {
-    if(record){
-      setValue("voicetext", transcript);
-    }
-  }, [transcript]);
-
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
-  
   return (
     <div>
       <div className="row">
@@ -310,9 +289,7 @@ function CustomForm(props: FormInput) {
             {formTitle}
           </h1>
         )}
-        <form
-          className={`${formclass ? formclass : "row row-cols-1"} g-2`}
-        >
+        <form className={`${formclass ? formclass : "row row-cols-1"} g-2`}>
           {formDetails.map((item: inputTypesDiff, indexOfForm: number) => {
             return (
               <div
@@ -1165,24 +1142,20 @@ function CustomForm(props: FormInput) {
                         }`}
                       >
                         {fields.map((field, formIndexArray) => {
-                          console.log(
-                            field,
-                            "field",
-                            formIndexArray,
-                            "formIndexArray"
-                          );
                           return (
-                              <MultiItemForm
-                                key={field.id}
-                                update={formArrayUpdate}
-                                index={formIndexArray}
-                                value={field}
-                                details={item.details}
-                                formClass = {item.arrayformclass}
-                                remove= {remove}
-                                propertyName = {item.name}
-                                valueofForm ={allFormData[item.name][formIndexArray]}
-                              />
+                            <MultiItemForm
+                              key={field.id}
+                              update={formArrayUpdate}
+                              index={formIndexArray}
+                              value={field}
+                              details={item.details}
+                              formClass={item.arrayformclass}
+                              remove={remove}
+                              propertyName={item.name}
+                              valueofForm={
+                                allFormData[item.name][formIndexArray]
+                              }
+                            />
                           );
                         })}
                       </div>
@@ -1196,29 +1169,35 @@ function CustomForm(props: FormInput) {
                     </div>
                   )}
 
-                  {item.type === "arrayform" &&
-                     <div className="position-relative">
+                  {/* {item.type === "voicetext" && (
+                    <div className="position-relative">
                       <Controller
-                            name={'voicetext'}
-                            control={control}
-                            rules={{
-                              ...item.validationobj,
-                            }}
-                            render={({ field }) => (
-                              <input
-                                type="text"
-                                className="form-control rounded-pill py-2"
-                              />
-                            )}
+                        name={item.name}
+                        control={control}
+                        rules={{
+                          ...item.validationobj,
+                        }}
+                        render={({ field }) => (
+                          <VoiceInput {...field}
+                            // type="text"
+                            // className="form-control rounded-pill py-2"
                           />
-                     <div className="position-absolute end-0 top-0 bottom-0"    onMouseDown={btnPressed}
-                       onMouseUp={btnReleased}>
-                       <button type="button" className="btn btn-success rounded-circle">
-                         <FaMicrophone />
-                       </button>
-                     </div>
-                   </div>
-                  }
+                        )}
+                      />
+                      {/* <div
+                        className="position-absolute end-0 top-0 bottom-0"
+                        onMouseDown={() => btnPressed(item.name)}
+                        onMouseUp={btnReleased}
+                      >
+                        <button
+                          type="button"
+                          className="btn btn-success rounded-circle"
+                        >
+                          <FaMicrophone />
+                        </button>
+                      </div> 
+                    </div>
+                  )} */}
 
                   {errors[item.name] &&
                     item.type !== "password" &&
@@ -1236,7 +1215,7 @@ function CustomForm(props: FormInput) {
               </div>
             );
           })}
-          {extendForm}
+          {extendForm && (extendForm)}
           <div
             className={`mt-3 col-12 col-md-12
             ${
@@ -1249,7 +1228,11 @@ function CustomForm(props: FormInput) {
                 : "text-center"
             } `}
           >
-            <button type="submit" className="btn btn-outline-primary me-2" onClick={handleSubmit(submitfn)}>
+            <button
+              type="submit"
+              className="btn btn-outline-primary me-2"
+              onClick={handleSubmit(submitfn)}
+            >
               {!submitFormBtn && (
                 <>
                   <i className="me-2">

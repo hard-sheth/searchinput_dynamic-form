@@ -38,7 +38,8 @@
     "react-loading": "^2.0.3",
     "react-paginate": "^8.2.0",
     "react-select": "^5.8.0",
-    "react-speech-recognition": "^3.10.0"
+    "react-speech-recognition": "^3.10.0",
+    "regenerator-runtime": "^0.14.1"
   },
   "peerDependencies": {
     "moment": "^2.30.1",
