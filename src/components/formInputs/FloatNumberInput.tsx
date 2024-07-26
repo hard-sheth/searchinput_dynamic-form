@@ -7,17 +7,22 @@ import {
 } from "react-hook-form";
 import { inputTypesDiffDynamic } from "../../utils/sample";
 
-type TextProps = {
+type NumberProps = {
   field: ControllerRenderProps<FieldValues, string>;
   fieldState: ControllerFieldState;
   formState: UseFormStateReturn<FieldValues>;
   item: inputTypesDiffDynamic;
 };
 
-function TextInput({ item, field, fieldState, formState }: TextProps) {
-  if (item.type === "text") {
+export default function FloatNumberInput({
+  item,
+  field,
+  fieldState,
+  formState,
+}: NumberProps) {
+  if (item.type === "float") {
     return (
-      <div className="input-group">
+      <div className={`input-group`}>
         {item.leftplaceText && (
           <div
             className={`input-group-text ${
@@ -28,10 +33,9 @@ function TextInput({ item, field, fieldState, formState }: TextProps) {
           </div>
         )}
         <input
-          type={"text"}
+          type={"number"}
           {...field}
-          minLength={item.minInput}
-          maxLength={item.maxInput}
+          step={item.step}
           className={`${
             fieldState.error
               ? "is-invalid"
@@ -39,12 +43,26 @@ function TextInput({ item, field, fieldState, formState }: TextProps) {
               ? "is-valid"
               : ""
           } ${item.classinput ? item.classinput : "form-control"}`}
-          onChange={(e) => {
-            field.onChange(e.target.value);
+          onKeyUp={(e) => {
+            if (
+              e.key != "ArrowUp" &&
+              e.key != "ArrowDown" &&
+              e.key != "ArrowRight" &&
+              e.key != "ArrowLeft"
+            ) {
+              console.log(
+                "Number(item.value)",
+                (e.target as HTMLInputElement).value
+              );
+              field.onChange(Number((e.target as HTMLInputElement).value));
+            } else {
+              e.preventDefault();
+            }
           }}
           placeholder={`${item.placeholder ? item.placeholder : ""}`}
+          minLength={item.minInput}
+          maxLength={item.maxInput}
         />
-
         {item.rightplaceText && (
           <div
             className={`input-group-text ${
@@ -66,5 +84,3 @@ function TextInput({ item, field, fieldState, formState }: TextProps) {
     );
   }
 }
-
-export default TextInput;

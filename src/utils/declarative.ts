@@ -1,4 +1,4 @@
-import { Inputfields } from "src/components/DynamicForm";
+import { Inputfields } from "../components/DynamicForm";
 
 type Holiday = {
   date: Date | string;

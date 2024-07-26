@@ -11,8 +11,8 @@ function VideoCard({ fileNameDisplay, clear, link, index, removeCard }: propCard
         }}
         className="btn-close position-absolute top-0 end-0"
       ></button>}
-      <a href={`${link}`} target="_blank" className="text-center mt-3">
-        <p>
+     <a href={`${link}`} target="_blank" className="text-center ">
+        <p className="mt-2">
           <FaPhotoVideo size={60} />
         </p>
       </a>
