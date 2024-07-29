@@ -8,10 +8,10 @@ import {
   ControllerFieldState,
   ControllerRenderProps,
   FieldValues,
-  useForm,
   UseFormStateReturn,
   useWatch,
 } from "react-hook-form";
+import { MdErrorOutline } from "react-icons/md";
 
 type SelectProps = {
   field: ControllerRenderProps<FieldValues, string>;
@@ -28,11 +28,10 @@ function SelectInput({
   formState,
   control,
 }: SelectProps) {
-  console.log(field.value, `value of ${item.type}`);
 
   if (item.type === "select") {
     return (
-      <>
+      <div className="position-relative">
         <Select
           {...field}
           onChange={(e) => {
@@ -55,9 +54,15 @@ function SelectInput({
           isClearable
           isMulti={item.isMulti ? item.isMulti : false}
           onInputChange={item.inputchange ? item.inputchange : undefined}
-          // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
+          // className={fieldState.error ? "is-invalid" : ""}
         />
-      </>
+        {fieldState.error && <div
+          className="position-absolute bottom-0"
+          style={{ right: "43px", top: "5px" }}
+        >
+          <MdErrorOutline size={20} color="red" />
+        </div>}
+      </div>
     );
   } else if (item.type === "dependabledropdown") {
     const firstName = useWatch({
@@ -69,7 +74,7 @@ function SelectInput({
       field.onChange("");
     }, [firstName]);
     return (
-      <>
+      <div className="position-relative">
         <Select
           {...field}
           onChange={(e) => {
@@ -93,10 +98,15 @@ function SelectInput({
           onInputChange={item.inputchange ? item.inputchange : undefined}
           // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
         />
-      </>
+          {fieldState.error && <div
+          className="position-absolute bottom-0"
+          style={{ right: "43px", top: "5px" }}
+        >
+          <MdErrorOutline size={20} color="red" />
+        </div>}
+      </div>
     );
   }
-  console.log(item, "item");
 }
 
 export default SelectInput;

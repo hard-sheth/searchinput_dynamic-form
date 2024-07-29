@@ -21,7 +21,7 @@ export default function SecureInput({
   fieldState,
   formState,
 }: SecureProps) {
-  const [secureValue, setSecureValue] = useState("");
+  const [secureValue, setSecureValue] = useState(field.value);
   function changeSecure(e: KeyboardEvent | KeyboardEvent | any) {
     const eventValue = (e.target as HTMLInputElement).value;
     const pattern = /^[0-9]+$/;
@@ -48,7 +48,6 @@ export default function SecureInput({
         {item.inputType == "number" && (
           <input
             type={"password"}
-            // {...field}
             value={secureValue}
             className={`${
               fieldState.error
