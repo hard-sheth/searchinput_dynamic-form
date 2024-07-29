@@ -51,12 +51,12 @@ type InputfieldsOptions = {
     type: "select";
     options: SelectOptionsDynamic[];
     defaultvalue?: string | SelectOptionsDynamic;
-    isMulti: boolean;
-    maxOptions: number;
+    isMulti?: boolean;
+    maxOptions?: number;
     inputchange?: (data: string) => {};
-    url: string;
+    url?: string;
     createable?: boolean;
-    optionPromise: () => void;
+    optionPromise?: () => void;
     // Promise<SelectOptions[]>
   };
   
@@ -66,9 +66,9 @@ type InputfieldsOptions = {
     previousSelect: string;
     options: SelectOptionsDynamic[];
     isMulti: boolean;
-    maxOptions: number;
-    inputchange?: (data: string) => {};
-    optionPromise: () => void;
+    maxOptions?: number;
+    inputchange?: (data: string) => void;
+    optionPromise?: () => void;
   };
   
   type VoiceText = Inputfields<InputfieldsOptions> & {

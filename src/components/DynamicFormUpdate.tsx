@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -14,6 +14,7 @@ import {
   inputTypesDiffDynamic,
   SelectOptionsDynamic,
 } from "../utils/sample";
+import SelectInput from "./formInputs/SelectInput";
 const EmailInput= React.lazy(() => import( "./formInputs/EmailInput"));
 const FloatNumberInput= React.lazy(() => import( "./formInputs/FloatNumberInput"));
 const SecureInput= React.lazy(() => import( "./formInputs/SecureInput"));
@@ -96,6 +97,8 @@ function FormDynamic(props: FormInput) {
 
   formValues(allFormData);
 
+  console.log(allFormData, 'allFormData');  
+
   const selectOptions = formDetails.filter((item) => {
     if (item.type === "dependabledropdown") {
       return item;
@@ -138,6 +141,14 @@ function FormDynamic(props: FormInput) {
     const myUpdateValue = { ...detailForm, ...details };
     setValue(`${propertyname}.${indexOfForm}`, { ...myUpdateValue });
   }
+
+  const dependableDropdownList = formDetails.filter((item)=>{
+    if(item.type === "dependabledropdown"){
+      return item.previousSelect
+    }
+  })
+  
+console.log(dependableDropdownList, 'dependableDropdownList');
 
   return (
     <div>
@@ -231,6 +242,9 @@ function FormDynamic(props: FormInput) {
                   {item.type == "number" && (
                     <Controller
                       name={`${item.name}`}
+                      rules={{
+                        ...item.validationobj,
+                      }}
                       control={control}
                       render={({ field, fieldState, formState }) => (
                         <React.Suspense fallback={<div>Loading...</div>}>
@@ -347,30 +361,24 @@ function FormDynamic(props: FormInput) {
 
                   {item.type == "select" && (
                     <div className="col ">
-                      {!item.url && (
+                      
                         <Controller
                           name={item.name}
                           control={control}
                           rules={{
                             ...item.validationobj,
                           }}
-                          render={({ field }) => (
-                            <Select
-                              {...field}
-                              isDisabled={false}
-                              isLoading={false}
-                              isSearchable={true}
-                              options={item.options}
-                              isClearable
-                              onInputChange={
-                                item.inputchange ? item.inputchange : undefined
-                              }
-                              // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
+                          render={({ field, fieldState, formState }) => (
+                            <SelectInput
+                              field={field}
+                              fieldState={fieldState}
+                              formState={formState}
+                              item={item}
                             />
                           )}
                         />
-                      )}
-                      {item.url && (
+                      
+                      {/* {item.url && (
                         <Controller
                           name={item.name}
                           control={control}
@@ -394,7 +402,7 @@ function FormDynamic(props: FormInput) {
                             />
                           )}
                         />
-                      )}
+                      )} */}
                       {errors[item.name] && (
                         <div className="invalid-feedback d-block">
                           {errors[item.name]?.message as React.ReactNode}
@@ -405,7 +413,7 @@ function FormDynamic(props: FormInput) {
 
                   {item.type == "dependabledropdown" && (
                     <div className="col">
-                      {!item.url && (
+                      {/* {!item.url && (
                         <Controller
                           name={item.name}
                           control={control}
@@ -424,32 +432,31 @@ function FormDynamic(props: FormInput) {
                             />
                           )}
                         />
-                      )}
-                      {item.url && (
-                        <Controller
+                      )} */}
+                       <Controller
                           name={item.name}
                           control={control}
                           rules={{
                             ...item.validationobj,
                           }}
-                          render={({ field }) => (
-                            <DependantDropdown
-                              {...field}
-                              dependData={previousData}
-                              dependUrl={item.url}
-                              onInputChange={
-                                item.inputchange ? item.inputchange : () => {}
+                          render={({ field, fieldState, formState }) => (
+                            <React.Suspense fallback={<div>Loading...</div>}>
+                            <SelectInput
+                              field={field}
+                              fieldState={fieldState}
+                              formState={formState}
+                              item={item}
+                              control= { control
+                                // allFormData[item.previousSelect]
                               }
-                              maxOptions={item?.maxOptions}
-                            />
+                              />
+                        {fieldState.error && <div className="invalid-feedback d-block">
+                          {fieldState.error?.message as React.ReactNode}
+                        </div>}
+                              </React.Suspense>
                           )}
                         />
-                      )}
-                      {errors[item.name] && (
-                        <div className="invalid-feedback d-block">
-                          {errors[item.name]?.message as React.ReactNode}
-                        </div>
-                      )}
+                      
                     </div>
                   )}
 
@@ -478,7 +485,7 @@ function FormDynamic(props: FormInput) {
                     />
                   )}
 
-                  {item.type === "arrayform" && (
+                  {/* {item.type === "arrayform" && (
                     <div>
                       <div
                         className={`${
@@ -511,7 +518,7 @@ function FormDynamic(props: FormInput) {
                         <FaPlus /> Add
                       </button>
                     </div>
-                  )}
+                  )} */}
 
                   {errors[item.name] &&
                     item.type !== "password" &&
