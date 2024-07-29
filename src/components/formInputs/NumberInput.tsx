@@ -20,7 +20,6 @@ export default function NumberInput({
   fieldState,
   formState,
 }: NumberProps) {
-  console.log(field.value,' number Input',fieldState, 'fieldState', formState, 'formState');  
   return (
     <div className={`input-group`}>
       {item.leftplaceText && (

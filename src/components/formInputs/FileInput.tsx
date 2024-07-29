@@ -20,28 +20,23 @@ export default function FileInput({
   fieldState,
   formState,
 }: FileProps) {
-  console.log(field.value, 'vale');  
   function handleDragOver(event: any) {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    console.log(files, "files");
     field.onChange(files);
   }
 
   function handleDrop(event: React.DragEvent) {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    console.log(files, 'handleDrop');    
     field.onChange(files);
   }
 
   function updateFileForm(valueFile: any) {
     field.onChange(valueFile);
-    console.log(valueFile, 'updateFileForm');    
   }
 
   function fileUploadEvent(event: React.ChangeEvent<HTMLInputElement>) {
-    console.log(event.target.files, 'fileUploadEvent');    
     field.onChange(event.target.files);
   }
   if (item.type === "file") {

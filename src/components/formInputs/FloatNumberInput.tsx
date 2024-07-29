@@ -50,10 +50,6 @@ export default function FloatNumberInput({
               e.key != "ArrowRight" &&
               e.key != "ArrowLeft"
             ) {
-              console.log(
-                "Number(item.value)",
-                (e.target as HTMLInputElement).value
-              );
               field.onChange(Number((e.target as HTMLInputElement).value));
             } else {
               e.preventDefault();

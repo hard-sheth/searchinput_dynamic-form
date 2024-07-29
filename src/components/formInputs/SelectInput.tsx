@@ -35,7 +35,6 @@ function SelectInput({
         <Select
           {...field}
           onChange={(e) => {
-            // console.log(e,'e select Input');
             if (item.maxOptions && field.value.length < item.maxOptions) {
               field.onChange(e);
             } else if (!item.maxOptions) {

@@ -1,12 +1,8 @@
 import * as React from "react";
-import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import Select from "react-select";
-import AsyncSelect from "react-select/async";
-import DependantDropdown from "./DependantDropdown";
-// import { AiOutlineClear } from "react-icons/ai";
 import { BsFloppy } from "react-icons/bs";
 import { MultiItemForm } from "./MultiAddRemove";
 import {
@@ -14,7 +10,6 @@ import {
   inputTypesDiffDynamic,
   SelectOptionsDynamic,
 } from "../utils/sample";
-import SelectInput from "./formInputs/SelectInput";
 const EmailInput= React.lazy(() => import( "./formInputs/EmailInput"));
 const FloatNumberInput= React.lazy(() => import( "./formInputs/FloatNumberInput"));
 const SecureInput= React.lazy(() => import( "./formInputs/SecureInput"));
@@ -26,6 +21,7 @@ const FileInput= React.lazy(() => import( "./formInputs/FileInput"));
 const VoiceInput = React.lazy(() => import("./formInputs/VoiceInput"));
 const NumberInput = React.lazy(() => import("./formInputs/NumberInput"));
 const TextInput = React.lazy(() => import("./formInputs/TextInput"));
+const SelectInput = React.lazy(() => import("./formInputs/SelectInput"));
 
 type FormInput = {
   submitfn: (params: object) => void;
@@ -97,8 +93,6 @@ function FormDynamic(props: FormInput) {
 
   formValues(allFormData);
 
-  console.log(allFormData, 'allFormData');  
-
   const selectOptions = formDetails.filter((item) => {
     if (item.type === "dependabledropdown") {
       return item;
@@ -141,14 +135,6 @@ function FormDynamic(props: FormInput) {
     const myUpdateValue = { ...detailForm, ...details };
     setValue(`${propertyname}.${indexOfForm}`, { ...myUpdateValue });
   }
-
-  const dependableDropdownList = formDetails.filter((item)=>{
-    if(item.type === "dependabledropdown"){
-      return item.previousSelect
-    }
-  })
-  
-console.log(dependableDropdownList, 'dependableDropdownList');
 
   return (
     <div>
@@ -369,12 +355,14 @@ console.log(dependableDropdownList, 'dependableDropdownList');
                             ...item.validationobj,
                           }}
                           render={({ field, fieldState, formState }) => (
+                            <React.Suspense fallback={<div>Loading...</div>}>
                             <SelectInput
                               field={field}
                               fieldState={fieldState}
                               formState={formState}
                               item={item}
                             />
+                            </React.Suspense>
                           )}
                         />
                       
@@ -485,7 +473,7 @@ console.log(dependableDropdownList, 'dependableDropdownList');
                     />
                   )}
 
-                  {/* {item.type === "arrayform" && (
+                  {item.type === "arrayform" && (
                     <div>
                       <div
                         className={`${
@@ -518,7 +506,7 @@ console.log(dependableDropdownList, 'dependableDropdownList');
                         <FaPlus /> Add
                       </button>
                     </div>
-                  )} */}
+                  )}
 
                   {errors[item.name] &&
                     item.type !== "password" &&

@@ -22,12 +22,11 @@ function CheckBoxInput({ item, field, fieldState, formState }: TextProps) {
     return (
       <div className={`col-12 ${item.classinput ? item.classinput : ""}`}>
         {item.options.map(
-          (checkboxOption: CheckBoxOptionsDynamic, index: number) => {
-            console.log(`checkbox-${field.name}-${index}`,index);            
+          (checkboxOption: CheckBoxOptionsDynamic, index: number) => {     
             return (
               <div className={`form-check `} key={`checkbox-${index + 1}`}>
                 <input
-                  className={`form-check-input`}
+                  className={`form-check-input ${fieldState.error? 'is-invalid':''}`}
                   type="checkbox"
                   {...field}
                   id={`checkbox-${field.name}-${index}`}

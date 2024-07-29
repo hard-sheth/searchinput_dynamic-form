@@ -7,12 +7,13 @@ import DependantDropdown from "./DependantDropdown";
 import { CheckBoxOptions, inputTypesDiff, SelectOptions } from "./CustomForm";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
+import { inputTypesDiffDynamic } from "./DynamicFormUpdate";
 
 type ArrayForm = {
   update?: any;
   index: number;
   value: any;
-  details: inputTypesDiff[];
+  details: inputTypesDiffDynamic[]|inputTypesDiff[];
   formClass?: string;
   remove: any;
   propertyName: string;
