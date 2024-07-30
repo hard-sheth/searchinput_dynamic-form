@@ -457,8 +457,6 @@ function FormDynamic(props: FormInput) {
                         }`}
                       >
                         {fields.map((field, formIndexArray) => {
-                          console.log(field, 'field of array');
-                          
                           return (
                             <MultiAddRemoveArray
                               key={field.id}

@@ -43,7 +43,6 @@ function MultiItemForm({
   function handleDragOver(event: any) {
     event.preventDefault();
     const files = event.dataTransfer.files;
-    console.log(handleDragOver, "handleDragOver");
   }
 
   function handleDrop(event: React.DragEvent, prop__name: string) {

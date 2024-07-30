@@ -21,9 +21,7 @@ export default function NumberInput({
   formState,
 }: NumberProps) {
   const [formValue, setFormValue] = React.useState(field.value);
-  React.useEffect(() => {
-    console.log(field.value, 'value no.');
-    
+  React.useEffect(() => {    
     if (!field.value) {
       setFormValue("");
     } else {
