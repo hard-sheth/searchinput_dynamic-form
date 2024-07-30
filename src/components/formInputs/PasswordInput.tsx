@@ -18,12 +18,21 @@ type TextProps = {
 function PasswordInput({ item, field, fieldState, formState }: TextProps) {
   if (item.type === "password") {
     const [showPassword, setShowPassword] = React.useState(false);
+    const [formValue, setFormValue] = React.useState(field.value);
+    React.useEffect(() => {
+      if (!field.value) {
+        setFormValue("");
+      } else {
+        setFormValue(field.value);
+      }
+    }, [field.value]);
     return (
       <div className="input-group">
         {!showPassword && (
           <input
             type={"password"}
-            {...field}
+            value={formValue}
+            name={field.name}
             className={`${
               fieldState.error
                 ? "is-invalid"
@@ -37,12 +46,14 @@ function PasswordInput({ item, field, fieldState, formState }: TextProps) {
               field.onChange(e.target.value);
             }}
             placeholder={`${item.placeholder ? item.placeholder : ""}`}
+            autoComplete="off"
           />
         )}
         {showPassword && (
           <input
             type={"text"}
-            {...field}
+            value={formValue}
+            name={field.name}
             minLength={item.minInput}
             maxLength={item.maxInput}
             className={`${

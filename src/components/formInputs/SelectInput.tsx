@@ -30,6 +30,11 @@ function SelectInput({
 }: SelectProps) {
 
   if (item.type === "select") {
+    React.useEffect(() => {
+      if(!field.value){
+        field.onChange("");
+      }
+    }, [field.value]);
     return (
       <div className="position-relative">
         <Select
@@ -55,7 +60,7 @@ function SelectInput({
           onInputChange={item.inputchange ? item.inputchange : undefined}
           // className={fieldState.error ? "is-invalid" : ""}
         />
-        {fieldState.error && <div
+        {(field.value === "select..." || fieldState.error) && <div
           className="position-absolute bottom-0"
           style={{ right: "43px", top: "5px" }}
         >
@@ -97,7 +102,7 @@ function SelectInput({
           onInputChange={item.inputchange ? item.inputchange : undefined}
           // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
         />
-          {fieldState.error && <div
+          {(field.value === "select..." ||fieldState.error) && <div
           className="position-absolute bottom-0"
           style={{ right: "43px", top: "5px" }}
         >

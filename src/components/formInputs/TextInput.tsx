@@ -16,6 +16,14 @@ type TextProps = {
 
 function TextInput({ item, field, fieldState, formState }: TextProps) {
   if (item.type === "text") {
+    const [formValue,setFormValue] = React.useState(field.value)
+    React.useEffect(() => {
+      if (!field.value) {
+        setFormValue('');
+      }else{
+        setFormValue(field.value);
+      }
+    }, [field.value]);
     return (
       <div className="input-group">
         {item.leftplaceText && (
@@ -29,7 +37,8 @@ function TextInput({ item, field, fieldState, formState }: TextProps) {
         )}
         <input
           type={"text"}
-          {...field}
+          name={field.name}
+          value={formValue}
           minLength={item.minInput}
           maxLength={item.maxInput}
           className={`${

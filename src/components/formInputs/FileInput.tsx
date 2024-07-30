@@ -6,7 +6,7 @@ import {
   UseFormStateReturn,
 } from "react-hook-form";
 import { inputTypesDiffDynamic } from "../../utils/sample";
-import { FileBifercation } from "../FileBifercation";
+import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
 type FileProps = {
   field: ControllerRenderProps<FieldValues, string>;
@@ -58,7 +58,8 @@ export default function FileInput({
           <input
             type="file"
             multiple={item.isMulti}
-            {...field}
+            // {...field}
+            name={field.name}
             onChange={(eve) => fileUploadEvent(eve)}
             accept={item.accept}
             className={`${fieldState.error ? "is-invalid" : ""} ${

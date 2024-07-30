@@ -28,7 +28,8 @@ function CheckBoxInput({ item, field, fieldState, formState }: TextProps) {
                 <input
                   className={`form-check-input ${fieldState.error? 'is-invalid':''}`}
                   type="checkbox"
-                  {...field}
+                  // {...field}
+                  name={field.name}
                   id={`checkbox-${field.name}-${index}`}
                   onChange={(e) => field.onChange(e.target.checked)}
                   checked={field.value}

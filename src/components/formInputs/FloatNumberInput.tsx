@@ -21,6 +21,14 @@ export default function FloatNumberInput({
   formState,
 }: NumberProps) {
   if (item.type === "float") {
+    const [formValue, setFormValue] = React.useState(field.value);
+    React.useEffect(() => {
+      if (!field.value) {
+        setFormValue("");
+      } else {
+        setFormValue(field.value);
+      }
+    }, [field.value]);
     return (
       <div className={`input-group`}>
         {item.leftplaceText && (
@@ -34,7 +42,8 @@ export default function FloatNumberInput({
         )}
         <input
           type={"number"}
-          {...field}
+          name={field.name}
+          value={formValue}
           step={item.step}
           className={`${
             fieldState.error

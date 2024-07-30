@@ -15,6 +15,14 @@ type TextProps = {
 };
 
 function EmailInput({ item, field, fieldState, formState }: TextProps) {
+  const [formValue, setFormValue] = React.useState(field.value);
+  React.useEffect(() => {
+    if (!field.value) {
+      setFormValue("");
+    } else {
+      setFormValue(field.value);
+    }
+  }, [field.value]);
   return (
     <div className="input-group">
       {item.leftplaceText && (
@@ -26,9 +34,10 @@ function EmailInput({ item, field, fieldState, formState }: TextProps) {
       )}
       <input
         type={"email"}
-        {...field}
+        value={formValue}
+        name={field.name}
         minLength={item.minInput}
-            maxLength={item.maxInput}
+        maxLength={item.maxInput}
         className={`${
           fieldState.error
             ? "is-invalid"

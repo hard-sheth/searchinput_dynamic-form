@@ -3,24 +3,26 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
-import DependantDropdown from "./DependantDropdown";
-import { CheckBoxOptions, inputTypesDiff, SelectOptions } from "./CustomForm";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
-import { inputTypesDiffDynamic } from "./DynamicFormUpdate";
-
+import {
+  CheckBoxOptionsDynamic,
+  inputTypesDiffDynamic,
+  SelectOptionsDynamic,
+} from "../DynamicFormUpdate";
+const PasswordInput = React.lazy(() => import("./PasswordInput"));
 type ArrayForm = {
   update?: any;
   index: number;
   value: any;
-  details: inputTypesDiffDynamic[]|inputTypesDiff[];
+  details: inputTypesDiffDynamic[];
   formClass?: string;
   remove: any;
   propertyName: string;
   valueofForm: any;
 };
 
-function MultiItemForm({
+function MultiAddRemoveArray({
   update,
   index,
   value,
@@ -28,7 +30,7 @@ function MultiItemForm({
   formClass,
   remove,
   propertyName,
-  valueofForm
+  valueofForm,
 }: ArrayForm) {
   const {
     control,
@@ -61,16 +63,17 @@ function MultiItemForm({
     update(index, propertyName, { [prop__name]: event.target.files });
   }
 
-  function updateFileForm(prop__name: string, valueFile: any) {
+  function updateFileForm(valueFile: any, prop__name = "") {
     setValue(prop__name, valueFile);
     update(index, propertyName, { [prop__name]: valueFile });
   }
 
+  const myEntrerObjName = Object.keys(value);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value:eventvalue } = event.target;
+    const { name, value: eventvalue } = event.target;
     update(index, propertyName, { [name]: eventvalue }); // Update the field in the array in real-time
   };
-
 
   if (Object.keys(valueofForm).length > 0) {
     for (const formThing of Object.entries(valueofForm)) {
@@ -79,7 +82,7 @@ function MultiItemForm({
   }
 
   return (
-    <div className={`row position-relative py-3 ${formClass}`} >
+    <div className={`row position-relative py-3 ${formClass}`}>
       {details.map((item, indexOfForm: number) => {
         return (
           <div
@@ -283,7 +286,8 @@ function MultiItemForm({
                               e.key != "ArrowLeft"
                             ) {
                               const keyName = item.name;
-                              const keyValue = (e.target as HTMLInputElement).value;
+                              const keyValue = (e.target as HTMLInputElement)
+                                .value;
                               update(index, propertyName, {
                                 [keyName]: keyValue,
                               });
@@ -310,7 +314,7 @@ function MultiItemForm({
                 )}
                 {!item.rightplaceText && !item.leftplaceText && (
                   <Controller
-                  name={`${item.name}`}
+                    name={`${item.name}`}
                     control={control}
                     rules={{
                       ...item.validationobj,
@@ -322,9 +326,7 @@ function MultiItemForm({
                         className={`${errors[item.name] ? "is-invalid" : ""} ${
                           item.classinput ? item.classinput : "form-control"
                         }`}
-                        onKeyUp={(
-                          e: React.KeyboardEvent<HTMLInputElement>
-                        ) => {
+                        onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                           if (
                             e.key != "ArrowUp" &&
                             e.key != "ArrowDown" &&
@@ -332,7 +334,8 @@ function MultiItemForm({
                             e.key != "ArrowLeft"
                           ) {
                             const keyName = item.name;
-                            const keyValue = (e.target as HTMLInputElement).value;
+                            const keyValue = (e.target as HTMLInputElement)
+                              .value;
                             update(index, propertyName, {
                               [keyName]: keyValue,
                             });
@@ -387,7 +390,8 @@ function MultiItemForm({
                               e.key != "ArrowLeft"
                             ) {
                               const keyName = item.name;
-                              const keyValue = (e.target as HTMLInputElement).value;
+                              const keyValue = (e.target as HTMLInputElement)
+                                .value;
                               update(index, propertyName, {
                                 [keyName]: keyValue,
                               });
@@ -414,7 +418,7 @@ function MultiItemForm({
                 )}
                 {!item.rightplaceText && !item.leftplaceText && (
                   <Controller
-                  name={`${item.name}`}
+                    name={`${item.name}`}
                     control={control}
                     rules={{
                       ...item.validationobj,
@@ -434,7 +438,8 @@ function MultiItemForm({
                             e.key != "ArrowLeft"
                           ) {
                             const keyName = item.name;
-                            const keyValue = (e.target as HTMLInputElement).value;
+                            const keyValue = (e.target as HTMLInputElement)
+                              .value;
                             update(index, propertyName, {
                               [keyName]: keyValue,
                             });
@@ -611,7 +616,7 @@ function MultiItemForm({
                   render={({ field, formState: { errors } }) => (
                     <>
                       {item.radioOptions.map(
-                        (radioOption: SelectOptions, index: number) => {
+                        (radioOption: SelectOptionsDynamic, index: number) => {
                           return (
                             <div
                               className={`form-check ${
@@ -628,7 +633,9 @@ function MultiItemForm({
                                 onChange={() => {
                                   const keyName = item.name;
                                   const keyValue = radioOption.value;
-                                  update(index, propertyName, {[keyName]: keyValue,});
+                                  update(index, propertyName, {
+                                    [keyName]: keyValue,
+                                  });
                                 }}
                               />
                               <label
@@ -665,7 +672,10 @@ function MultiItemForm({
                   render={({ field, formState: { errors } }) => (
                     <>
                       {item.options.map(
-                        (checkboxOption: CheckBoxOptions, index: number) => {
+                        (
+                          checkboxOption: CheckBoxOptionsDynamic,
+                          index: number
+                        ) => {
                           return (
                             <div
                               className={`form-check `}
@@ -681,7 +691,9 @@ function MultiItemForm({
                                   (e) => {
                                     const keyName = item.name;
                                     const keyValue = e.target.checked;
-                                    update(index, item.name,{ [keyName]: keyValue });
+                                    update(index, item.name, {
+                                      [keyName]: keyValue,
+                                    });
                                   }
                                   // setValue(field.name, e.target.checked)
                                 }
@@ -853,10 +865,15 @@ function MultiItemForm({
         );
       })}
       <div className="position-absolute text-end">
-        <button type="button" className="btn-close" aria-label="Close" onClick={()=>remove(index)}></button>
+        <button
+          type="button"
+          className="btn-close"
+          aria-label="Close"
+          onClick={() => remove(index)}
+        ></button>
       </div>
     </div>
   );
 }
 
-export { MultiItemForm };
+export default MultiAddRemoveArray;

@@ -20,6 +20,27 @@ export default function NumberInput({
   fieldState,
   formState,
 }: NumberProps) {
+  const [formValue, setFormValue] = React.useState(field.value);
+  React.useEffect(() => {
+    console.log(field.value, 'value no.');
+    
+    if (!field.value) {
+      setFormValue("");
+    } else {
+      setFormValue(field.value);
+    }
+  }, [field.value]);
+  function changeSecure(e: KeyboardEvent | KeyboardEvent | any) {
+    const eventValue = (e.target as HTMLInputElement).value;
+    const pattern = /^[0-9]+$/;
+    if (eventValue.match(pattern)) {
+      field.onChange(eventValue);
+      setFormValue(eventValue);
+    } else if (!eventValue) {
+      field.onChange(eventValue);
+      setFormValue(eventValue);
+    }
+  }
   return (
     <div className={`input-group`}>
       {item.leftplaceText && (
@@ -31,7 +52,8 @@ export default function NumberInput({
       )}
       <input
         type={"number"}
-        {...field}
+        name={field.name}
+        value={formValue}
         minLength={item.minInput}
         maxLength={item.maxInput}
         className={`${
@@ -41,20 +63,7 @@ export default function NumberInput({
             ? "is-valid"
             : ""
         } ${item.classinput ? item.classinput : "form-control"}`}
-        onKeyUp={(e) => {
-          if (
-            e.key != "ArrowUp" &&
-            e.key != "ArrowDown" &&
-            e.key != "ArrowRight" &&
-            e.key != "ArrowLeft"
-          ) {
-            if (field.value) {
-              field.onChange((e.target as HTMLInputElement).value);
-            }
-          } else {
-            e.preventDefault();
-          }
-        }}
+        onChange={changeSecure}
         placeholder={`${item.placeholder ? item.placeholder : ""}`}
       />
       {item.rightplaceText && (

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
-import { PicCard } from "./cards/PicCard";
-import { VideoCard } from "./cards/VideoCard";
-import { Mp3Card } from "./cards/Mp3Card";
-import { DocCard } from "./cards/DocCard";
-import { ZipCard } from "./cards/ZipCard";
-import { PdfCard } from "./cards/PdfCard";
+import { PicCard } from "../cards/PicCard";
+import { VideoCard } from "../cards/VideoCard";
+import { Mp3Card } from "../cards/Mp3Card";
+import { DocCard } from "../cards/DocCard";
+import { ZipCard } from "../cards/ZipCard";
+import { PdfCard } from "../cards/PdfCard";
 
 type fileDetails = {
   SortCategory: File[];
   PropertyName: string;
-  UpdteValue?: (PropertyName: string, updateFileList: File | File[]) => void;
+  UpdteValue: (updateFileList: File | File[],nameProp?:string) => void;
   clearable?: boolean;
 };
 
@@ -41,10 +41,8 @@ export function FileBifercation({
   PropertyName,
 }: fileDetails) {
   const totalFiles = Array.from(SortCategory);
-  
+
   if (totalFiles.length > 0) {
-    // SortCategory.forEach((file) => {
-    // for (const file of SortCategory) {
     const [myFiles, setMyFiles] = useState(totalFiles);
     const updateRemovable = (index: number) => {
       totalFiles.slice(index, 1);
@@ -56,9 +54,7 @@ export function FileBifercation({
       setMyFiles(update);
     };
     useEffect(() => {
-      if (UpdteValue) {
-        UpdteValue(PropertyName, myFiles);
-      }
+      UpdteValue(myFiles, PropertyName);
     }, [myFiles]);
 
     return (

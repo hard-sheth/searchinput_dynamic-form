@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import {
   ControllerFieldState,
@@ -33,6 +33,13 @@ export default function SecureInput({
       setSecureValue(eventValue);
     }
   }
+  useEffect(()=>{
+    if (!field.value) {
+      setSecureValue('');
+    }else{
+      setSecureValue(field.value);
+    }
+  },[field.value])
   if (item.type === "secure") {
     return (
       <div className={`input-group`}>
@@ -49,6 +56,7 @@ export default function SecureInput({
           <input
             type={"password"}
             value={secureValue}
+            name={field.name}
             className={`${
               fieldState.error
                 ? "is-invalid"
@@ -68,7 +76,8 @@ export default function SecureInput({
             type={"password"}
             minLength={item.minInput}
             maxLength={item.maxInput}
-            {...field}
+            value={secureValue}
+            name={field.name}
             className={`${
               fieldState.error
                 ? "is-invalid"

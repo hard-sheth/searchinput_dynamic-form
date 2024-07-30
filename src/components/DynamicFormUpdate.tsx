@@ -4,25 +4,26 @@ import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { BsFloppy } from "react-icons/bs";
-import { MultiItemForm } from "./MultiAddRemove";
 import {
   CheckBoxOptionsDynamic,
   inputTypesDiffDynamic,
   SelectOptionsDynamic,
 } from "../utils/sample";
-const EmailInput= React.lazy(() => import( "./formInputs/EmailInput"));
-const FloatNumberInput= React.lazy(() => import( "./formInputs/FloatNumberInput"));
-const SecureInput= React.lazy(() => import( "./formInputs/SecureInput"));
-const PasswordInput= React.lazy(() => import( "./formInputs/PasswordInput"));
-const RadioInput= React.lazy(() => import( "./formInputs/RadioInput"));
-const CheckBoxInput= React.lazy(() => import( "./formInputs/CheckBoxInput"));
-const FileInput= React.lazy(() => import( "./formInputs/FileInput"));
+const EmailInput = React.lazy(() => import("./formInputs/EmailInput"));
+const FloatNumberInput = React.lazy(
+  () => import("./formInputs/FloatNumberInput")
+);
+const SecureInput = React.lazy(() => import("./formInputs/SecureInput"));
+const PasswordInput = React.lazy(() => import("./formInputs/PasswordInput"));
+const RadioInput = React.lazy(() => import("./formInputs/RadioInput"));
+const CheckBoxInput = React.lazy(() => import("./formInputs/CheckBoxInput"));
+const FileInput = React.lazy(() => import("./formInputs/FileInput"));
 // import VoiceInput from "./VoiceInput";
 const VoiceInput = React.lazy(() => import("./formInputs/VoiceInput"));
 const NumberInput = React.lazy(() => import("./formInputs/NumberInput"));
 const TextInput = React.lazy(() => import("./formInputs/TextInput"));
 const SelectInput = React.lazy(() => import("./formInputs/SelectInput"));
-
+const MultiAddRemoveArray = React.lazy(() => import("./formInputs/MultiAddRemoveArray"));
 type FormInput = {
   submitfn: (params: object) => void;
   // dependableAsync?: boolean;
@@ -92,29 +93,6 @@ function FormDynamic(props: FormInput) {
   const allFormData = watch();
 
   formValues(allFormData);
-
-  const selectOptions = formDetails.filter((item) => {
-    if (item.type === "dependabledropdown") {
-      return item;
-    }
-  });
-
-  let previousData: any;
-  if (
-    selectOptions.length > 0 &&
-    selectOptions[0].type === "dependabledropdown"
-  ) {
-    previousData = watch(selectOptions[0]?.previousSelect);
-  }
-
-  React.useEffect(() => {
-    if (selectOptions.length > 0) {
-      const dropDownDependent = watch(selectOptions[0].name);
-      if (dropDownDependent) {
-        setValue(selectOptions[0].name, "");
-      }
-    }
-  }, [previousData]);
 
   React.useEffect(() => {
     if (formDetails.length > 0) {
@@ -347,25 +325,24 @@ function FormDynamic(props: FormInput) {
 
                   {item.type == "select" && (
                     <div className="col ">
-                      
-                        <Controller
-                          name={item.name}
-                          control={control}
-                          rules={{
-                            ...item.validationobj,
-                          }}
-                          render={({ field, fieldState, formState }) => (
-                            <React.Suspense fallback={<div>Loading...</div>}>
+                      <Controller
+                        name={item.name}
+                        control={control}
+                        rules={{
+                          ...item.validationobj,
+                        }}
+                        render={({ field, fieldState, formState }) => (
+                          <React.Suspense fallback={<div>Loading...</div>}>
                             <SelectInput
                               field={field}
                               fieldState={fieldState}
                               formState={formState}
                               item={item}
                             />
-                            </React.Suspense>
-                          )}
-                        />
-                      
+                          </React.Suspense>
+                        )}
+                      />
+
                       {/* {item.url && (
                         <Controller
                           name={item.name}
@@ -421,30 +398,29 @@ function FormDynamic(props: FormInput) {
                           )}
                         />
                       )} */}
-                       <Controller
-                          name={item.name}
-                          control={control}
-                          rules={{
-                            ...item.validationobj,
-                          }}
-                          render={({ field, fieldState, formState }) => (
-                            <React.Suspense fallback={<div>Loading...</div>}>
+                      <Controller
+                        name={item.name}
+                        control={control}
+                        rules={{
+                          ...item.validationobj,
+                        }}
+                        render={({ field, fieldState, formState }) => (
+                          <React.Suspense fallback={<div>Loading...</div>}>
                             <SelectInput
                               field={field}
                               fieldState={fieldState}
                               formState={formState}
                               item={item}
-                              control= { control
-                                // allFormData[item.previousSelect]
-                              }
-                              />
-                        {fieldState.error && <div className="invalid-feedback d-block">
-                          {fieldState.error?.message as React.ReactNode}
-                        </div>}
-                              </React.Suspense>
-                          )}
-                        />
-                      
+                              control={control}
+                            />
+                            {fieldState.error && (
+                              <div className="invalid-feedback d-block">
+                                {fieldState.error?.message as React.ReactNode}
+                              </div>
+                            )}
+                          </React.Suspense>
+                        )}
+                      />
                     </div>
                   )}
 
@@ -481,8 +457,10 @@ function FormDynamic(props: FormInput) {
                         }`}
                       >
                         {fields.map((field, formIndexArray) => {
+                          console.log(field, 'field of array');
+                          
                           return (
-                            <MultiItemForm
+                            <MultiAddRemoveArray
                               key={field.id}
                               update={formArrayUpdate}
                               index={formIndexArray}
@@ -557,35 +535,27 @@ function FormDynamic(props: FormInput) {
                 type="reset"
                 className="ms-2 btn btn-outline-danger"
                 onClick={() => {
-                  const dropDowns = formDetails.filter(
-                    (item: inputTypesDiffDynamic) => {
-                      if (item.type === "select") {
-                        return item;
-                      }
-                    }
-                  );
+                  //  const textAreaList = formDetails.filter(
+                  //     (item: inputTypesDiffDynamic) => {
+                  //       if (item.type === "textarea") {
+                  //         return item;
+                  //       }
+                  //     }
+                  //   );
 
-                  if (dropDowns.length > 0) {
-                    for (const dropItem of dropDowns) {
-                      reset({ [dropItem.name]: "select..." });
+                  //   if (textAreaList.length > 0) {
+                  //     for (const iterator of textAreaList) {
+                  //       reset({ [iterator.name]: "<p></p>" });
+                  //     }
+                  //   }
+                  for (const iterator of formDetails) {
+                    if (iterator.type !== "textarea") {
+                      reset({ [iterator.name]: "" });
                     }
-                  }
-
-                  const textAreaList = formDetails.filter(
-                    (item: inputTypesDiffDynamic) => {
-                      if (item.type === "textarea") {
-                        return item;
-                      }
-                    }
-                  );
-
-                  if (textAreaList.length > 0) {
-                    for (const iterator of textAreaList) {
+                    else{
                       reset({ [iterator.name]: "<p></p>" });
                     }
                   }
-
-                  reset();
                 }}
               >
                 Reset
@@ -596,33 +566,19 @@ function FormDynamic(props: FormInput) {
                 type="reset"
                 className="ms-2 btn btn-outline-danger"
                 onClick={() => {
-                  const dropDowns = formDetails.filter(
-                    (item: inputTypesDiffDynamic) => {
-                      if (item.type === "select") {
-                        return item;
-                      }
-                    }
-                  );
+                  // const textAreaList = formDetails.filter(
+                  //   (item: inputTypesDiffDynamic) => {
+                  //     if (item.type === "textarea") {
+                  //       return item;
+                  //     }
+                  //   }
+                  // );
 
-                  if (dropDowns.length > 0) {
-                    for (const dropItem of dropDowns) {
-                      reset({ [dropItem.name]: "select..." });
-                    }
-                  }
-
-                  const textAreaList = formDetails.filter(
-                    (item: inputTypesDiffDynamic) => {
-                      if (item.type === "textarea") {
-                        return item;
-                      }
-                    }
-                  );
-
-                  if (textAreaList.length > 0) {
-                    for (const iterator of textAreaList) {
-                      reset({ [iterator.name]: "<p></p>" });
-                    }
-                  }
+                  // if (textAreaList.length > 0) {
+                  //   for (const iterator of textAreaList) {
+                  //     reset({ [iterator.name]: "<p></p>" });
+                  //   }
+                  // }
                   reset();
                 }}
               >
