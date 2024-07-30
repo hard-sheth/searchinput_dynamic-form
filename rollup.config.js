@@ -9,8 +9,8 @@ export default defineConfig({
     name: "pack-to-ui",
   },
   external: [
-    "react", 
-    "react-dom", 
+    "react",
+    "react-dom",
     "@ckeditor/ckeditor5-react",
     "@ckeditor/ckeditor5-build-classic",
     "axios", 
@@ -23,5 +23,8 @@ export default defineConfig({
     "moment",
     "react-speech-recognition"
   ],
-  plugins: [typescript({ tsconfig: "tsconfig.json" })],
+  plugins: [typescript({ tsconfig: "tsconfig.json" }),
+  postcss({
+    extensions: ['.css'],
+  })],
 });

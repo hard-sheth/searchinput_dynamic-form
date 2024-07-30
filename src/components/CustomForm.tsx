@@ -258,6 +258,13 @@ function CustomForm(props: FormInput) {
     setValue(propertyname, event.target.files);
   }
 
+  /**
+   * Update indexed form values
+   *
+   * @param {number} indexOfForm // which position of form can be updated form value.
+   * @param {string} propertyname // name of property which we will update in form.
+   * @param {object} details // in object which can update object.
+   */
   function formArrayUpdate(
     indexOfForm: number,
     propertyname: string,

@@ -1,3 +1,5 @@
+import { CalenderPropInput } from "./calender";
+
 type InputfieldsOptions = {
     lable?: string | JSX.Element;
     lableClass?: string;
