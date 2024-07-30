@@ -3,8 +3,7 @@ type Holiday = {
   holidayName: string;
 };
 /**
- * Update indexed form values
- *
+ * General parameters for Calendar.
  * @param {Date} minDate - Minimum Date which can be Selected.
  * @param {Date} maxDate - Maximum Date which can be Selected.
  * @param {Holiday} holidays - The Array of holiday. Which can be selected/can't select those Date .
@@ -29,8 +28,7 @@ export type CalenderPropInputProp = {
 };
 
 /**
- * Update indexed form values
- *
+ * Parameters for Calendar for only Dates.
  * @param {'date'} type - Only Date will be shown.
  * @param {string} propertyname - name of property which we will update in form.
  * @param {object} details - in object which can update object.
@@ -42,10 +40,8 @@ export type CalenderPropInputDate = CalenderPropInputProp & {
 };
 
 /**
- * Update indexed form values
- *
+ * Parameters for Calendar for only Date range.
  * @param {'daterange'} type - List of dates where we can start date & end date. Between select start date & end date it will select all those dates.
- * @param {string} propertyname - name of property which we will update in form.
  */
 
 export type CalnderDateRange = CalenderPropInputProp & {
@@ -53,8 +49,7 @@ export type CalnderDateRange = CalenderPropInputProp & {
 };
 
 /**
- * Description placeholder
- *
+ * Parameters for Calendar for Dates & Time.
  * @export
  * @typedef {CalnderDateTime} 
  * @param {'datetime'} type - Date & Time will be shown in input.

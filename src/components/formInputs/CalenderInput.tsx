@@ -1,7 +1,7 @@
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import * as React from "react";
-import DatePicker, { DatePickerProps } from "react-datepicker";
+import DatePicker from "react-datepicker";
 import {
   ControllerFieldState,
   ControllerRenderProps,
@@ -56,6 +56,7 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         onChange={(dates: Date | null | [Date | null, Date | null]) => {
           field.onChange(dates);
         }}
+        isClearable={true}
       />
     );
   } else if (item.type === "daterange") {
@@ -93,21 +94,38 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         holidays={item.holidays ? [...item.holidays] : []}
         dateFormat={item.dateFormat}
         selectsRange={true}
+        filterDate={isWeekday}
+        startDate={field.value[0] ? field.value[0] : null}
+        endDate={field.value[1] ? field.value[1] : null}
         onChange={(dates: Date | null | [Date | null, Date | null]) => {
           field.onChange(dates);
         }}
+        isClearable={true}
       />
     );
   } else if (item.type === "datetime") {
+    const getTimeIntervalArray = (timeBreakArray: string[][]) => {
+      const timeIntervalArray: string[] = [];
+      timeBreakArray.forEach((timeRange: Array<string>) => {
+        const startTime = moment(timeRange[0], "HH:mm");
+        const endTime = moment(timeRange[1], "HH:mm");
+        while (startTime.isBefore(endTime)) {
+          timeIntervalArray.push(startTime.format("HH:mm"));
+          startTime.add(item.timeIntervals, "minutes");
+        }
+      });
+
+      return timeIntervalArray;
+    };
     const filterPassedTime = (time: Date) => {
       const momentselectedDate = moment(time).format("H:mm");
       const weekDay = moment(time).weekday() as ParticularDay;
-      if (removeParticularDaysTime) {
+      if (item.removeParticularDaysTime) {
         const timeIntervalArrayWeekend = getTimeIntervalArray(
-          removeParticularDaysTime
+          item.removeParticularDaysTime
         );
-        const timeIntervalArray = getTimeIntervalArray(timeBreak);
-        if (particlarDayTimes?.includes(weekDay)) {
+        const timeIntervalArray = getTimeIntervalArray(item.timeBreak);
+        if (item.particlarDayTimes?.includes(weekDay)) {
           return timeIntervalArrayWeekend?.includes(momentselectedDate);
         } else {
           return timeIntervalArray?.includes(momentselectedDate);
@@ -135,6 +153,9 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         onChange={(dates: Date | null | [Date | null, Date | null]) => {
           field.onChange(dates);
         }}
+        filterTime={filterPassedTime}
+        showTimeSelect
+        isClearable={true}
       />
     );
   }
