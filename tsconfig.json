@@ -4,15 +4,22 @@
     "target": "ES2020",
     "module": "ESNext",
     "declaration": true,
-    "declarationDir": "dist",
+    // "declarationDir": "dist",
+    // "declarationDir": "./dist/types",
+    "outDir": "dist",
     "strict": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "react-loading": ["node_modules/react-loading"]
-    }
-  }
+    },
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
 
 // {

@@ -82,7 +82,8 @@ function MultiAddRemoveArray({
 
   return (
     <div className={`row position-relative py-3 ${formClass}`}>
-      {details.map((item, indexOfForm: number) => {
+      {details.map((item:inputTypesDiffDynamic, indexOfForm: number) => {
+        
         return (
           <div
             className={` ${item.maininputclass ? item.maininputclass : "col"}`}

@@ -20,6 +20,7 @@ export default function NumberInput({
   fieldState,
   formState,
 }: NumberProps) {
+  if(item.type==='number'){
   const [formValue, setFormValue] = React.useState(field.value);
   React.useEffect(() => {    
     if (!field.value) {
@@ -83,4 +84,5 @@ export default function NumberInput({
       )}
     </div>
   );
+}
 }

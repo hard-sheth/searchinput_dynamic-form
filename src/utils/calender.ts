@@ -1,3 +1,5 @@
+import { inputTypesDiffDynamic } from "./sample";
+
 type Holiday = {
   date: string;
   holidayName: string;
@@ -25,6 +27,15 @@ export type CalenderPropInputProp = {
   icons?: JSX.Element;
   removeParticularDays?: ParticularDay[];
   showIcon?: boolean;
+  name: string;
+  lable?: string | JSX.Element;
+  lableClass?: string;
+  placeholder?: string;
+  validationobj?: object;
+  somemsg?: string | JSX.Element;
+  maininputclass?: string;
+  value?: unknown;
+  excludeDates?: Date[];
 };
 
 /**
@@ -51,33 +62,86 @@ export type CalnderDateRange = CalenderPropInputProp & {
 /**
  * Parameters for Calendar for Dates & Time.
  * @export
- * @typedef {CalnderDateTime} 
+ * @typedef {CalnderDateTime}
  * @param {'datetime'} type - Date & Time will be shown in input.
  * @param {string[][]} timeBreak - A 2D array of strings On every day where we can have list of start time & end time an array. When start time & end time which can be used for can select those time betweem them.
  * @param {*} excludeTime - In the exclude time in those selected time which can't be select.
- * @param {particlarDayTimes[]} particlarDayTimes - Date & Time will be shown in input.
+ * @param {ParticularDay[]} particlarDayTime - On specific Days what shoule we do.
  * @param {number} timeIntervals - timeinterval which can be interval for time select.
- * @param {string[][]} removeParticularDaysTime - On particular day of week what kind of time should be applied.
+ * @param {string[][]} ParticularDaysTiming - On particular day of week what kind of time should be applied.
  * @param {ParticularDay[]} particlarDayTimes - Day of week where which can be time select can be changed.
+ * @param {string } minTime - Day of week where which can be time select can be changed.
+ * @param {string} maxTime - Day of week where which can be time select can be changed.
  */
-export type CalnderDateTime = CalenderPropInputProp & {
-  type: "datetime"; 
-  timeBreak: string[][];
-  excludeTime: [];
-  particlarDayTimes: ParticularDay[];
+export type CalnderDateTimeProps = CalenderPropInputProp & {
+  type: "datetime";
+  timeBreak?: string[][];
+  excludeTime?: [];
+
   timeIntervals: number;
-  removeParticularDaysTime: string[][];
+
+  minTime?: string;
+  maxTime?: string;
+  particlarDayTime?: ParticularDay[];
 };
 
+type withParticularDayTime = {
+  particlarDayTime: ParticularDay[];
+  particularDaysTiming: string[][];
+};
+
+type withoutParticularDayTime = {
+  particlarDayTime?: undefined;
+  particularDaysTiming?: never;
+};
+
+// type CalnderDateTimefields<T> = T & {
+//   particlarDayTime?: ParticularDay[]; // This property controls the presence of dependentProperty
+// } & (T extends { particlarDayTime: ParticularDay[] }
+//     ? { particularDaysTiming: string[][] } // If isEnabled is true, dependentProperty must exist
+//     : { particularDaysTiming?: never }); // If isEnabled is false or not present, dependentProperty should not exist
+
+export type CalnderDateTime = CalnderDateTimeProps & (withParticularDayTime|  withoutParticularDayTime);
+
+type Hour = string & { __brand: "Hour" };
+
+// // Custom type guard function
+export function isHourValid(value: string): value is Hour {
+  const timeString = value.split(":");
+  if (timeString.length === 2) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export type ParticularDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+export function isCalender(params: CalenderPropInput | inputTypesDiffDynamic) {
+  return (
+    params.type === "date" ||
+    params.type === "datetime" ||
+    params.type === "daterange"
+  );
+}
+
 export type CalenderPropInput =
-  | CalnderDateRange
-  | CalnderDateTime
-  | CalenderPropInputDate;
+| CalnderDateRange
+| CalnderDateTime
+| CalenderPropInputDate;
+
+// // Function to create an Hour
+// function createHour(value: number): Hour {
+//   if (!isHour(value)) {
+//     throw new Error(`Value ${value} is not a valid hour`);
+//   }
+//   return value as Hour;
+// }
 
 // type Inputfields<T> = T & {
-//   successValidation?: boolean; // This property controls the presence of dependentProperty
-// } & (T extends { successValidation: true }
-//     ? { successValidationMessage: string } // If isEnabled is true, dependentProperty must exist
+  //   successValidation?: boolean; // This property controls the presence of dependentProperty
+  // } & (T extends { successValidation: true }
+  //     ? { successValidationMessage: string } // If isEnabled is true, dependentProperty must exist
 //     : { successValidationMessage?: never }); // If isEnabled is false or not present, dependentProperty should not exist
 // type InputOptionList = Inputfields<InputfieldsOptions> & {
 //   type:
@@ -90,8 +154,6 @@ export type CalenderPropInput =
 //     | "searchoption"
 //     | "switch";
 // };
-
-export type ParticularDay = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 // type InputfieldsOptions = {
 //   lable?: string | JSX.Element;

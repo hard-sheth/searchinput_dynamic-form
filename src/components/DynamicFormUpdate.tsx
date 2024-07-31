@@ -9,6 +9,8 @@ import {
   inputTypesDiffDynamic,
   SelectOptionsDynamic,
 } from "../utils/sample";
+import { isCalender } from "src/utils/calender";
+const CalenderInput= React.lazy(() => import("./formInputs/CalenderInput"));
 const EmailInput = React.lazy(() => import("./formInputs/EmailInput"));
 const FloatNumberInput = React.lazy(
   () => import("./formInputs/FloatNumberInput")
@@ -448,6 +450,34 @@ function FormDynamic(props: FormInput) {
                       )}
                     />
                   )}
+
+                  {
+                    isCalender(item) && (
+                      <Controller
+                      name={item.name}
+                      control={control}
+                      rules={{
+                        ...item.validationobj,
+                      }}
+                      render={({ field, fieldState, formState }) => (
+                        <React.Suspense fallback={<div>Loading...</div>}>
+                          <CalenderInput
+                            field={field}
+                            fieldState={fieldState}
+                            formState={formState}
+                            item={item}
+                          />
+                          {fieldState.error && (
+                            <div className="form-text text-danger">
+                              {fieldState.error.message}
+                            </div>
+                          )}
+                        </React.Suspense>
+                      )}
+                    />
+                      
+                    )
+                  }
 
                   {item.type === "arrayform" && (
                     <div>

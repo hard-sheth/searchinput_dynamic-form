@@ -117,6 +117,7 @@ type InputfieldsOptions = {
     | VoiceText
     | FloatNumberInputProp
     | NumberInputProp
+    | CalenderPropInput
     | InputOptionList;
   
   type FormArray = Inputfields<InputfieldsOptions> & {

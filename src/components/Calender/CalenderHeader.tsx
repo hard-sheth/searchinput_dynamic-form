@@ -39,7 +39,7 @@ const CustomHeader = ({
   nextMonthButtonDisabled,
   changeYear,
   changeMonth,
-  startYear = 1930,
+  startYear = 1950,
   changeDate,
   endYear = moment().get('year'),
 }: HeaderOfCalender) => {
