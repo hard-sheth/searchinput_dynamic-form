@@ -10,7 +10,7 @@ import {
   SelectOptionsDynamic,
 } from "../utils/sample";
 import { isCalender } from "src/utils/calender";
-const CalenderInput= React.lazy(() => import("./formInputs/CalenderInput"));
+const CalenderInput = React.lazy(() => import("./formInputs/CalenderInput"));
 const EmailInput = React.lazy(() => import("./formInputs/EmailInput"));
 const FloatNumberInput = React.lazy(
   () => import("./formInputs/FloatNumberInput")
@@ -41,7 +41,14 @@ type FormInput = {
   extendForm?: JSX.Element;
   submitFormBtn?: JSX.Element;
   resetFormBtn?: JSX.Element;
+  validationLogic?: string;
 };
+
+function stringToFunction<T extends any[]>(fnString: string): (...args: T) => any {
+  // Create a new function from the string
+  const fn = new Function(...fnString.split(/[\(\)]/)[1].split(',').map(arg => arg.trim()), fnString.split(/[\(\)]/)[2].trim());
+  return fn as (...args: T) => any; // Cast to the appropriate function type
+}
 
 function FormDynamic(props: FormInput) {
   const {
@@ -58,6 +65,7 @@ function FormDynamic(props: FormInput) {
     extendForm,
     resetFormBtn,
     submitFormBtn,
+    validationLogic,
   } = props;
   const {
     control,
@@ -116,22 +124,25 @@ function FormDynamic(props: FormInput) {
     setValue(`${propertyname}.${indexOfForm}`, { ...myUpdateValue });
   }
 
+  if (validationLogic) {
+
+  }
+
   return (
     <div>
       <div className="row">
         {formTitle && (
           <h1
-            className={`${
-              titlePosition === "center"
-                ? `text-center`
-                : titlePosition === "start"
+            className={`${titlePosition === "center"
+              ? `text-center`
+              : titlePosition === "start"
                 ? `text-start`
                 : titlePosition === "end"
-                ? `text-end`
-                : titleClass
-                ? titleClass
-                : ""
-            }`}
+                  ? `text-end`
+                  : titleClass
+                    ? titleClass
+                    : ""
+              }`}
           >
             {formTitle}
           </h1>
@@ -141,24 +152,21 @@ function FormDynamic(props: FormInput) {
             (item: inputTypesDiffDynamic, indexOfForm: number) => {
               return (
                 <div
-                  className={` ${
-                    item.maininputclass ? item.maininputclass : "col"
-                  }`}
+                  className={` ${item.maininputclass ? item.maininputclass : "col"}`}
                   id={`formInput-${indexOfForm}`}
                   key={indexOfForm}
                 >
                   {item.lable && (
                     <label
-                      className={`form-label ${
-                        item.lableClass ? item.lableClass : ""
-                      }`}
+                      className={`form-label ${item.lableClass ? item.lableClass : ""
+                        }`}
                     >
                       {typeof item.lable === "string" && item.lable
                         ? item.lable?.split(/\*/)[0]
                         : item.lable}
                       <span className="text-danger">
                         {typeof item.lable === "string" &&
-                        item.lable?.split(/\*/)?.length > 1
+                          item.lable?.split(/\*/)?.length > 1
                           ? "*"
                           : ""}
                       </span>
@@ -454,37 +462,39 @@ function FormDynamic(props: FormInput) {
                   {
                     isCalender(item) && (
                       <Controller
-                      name={item.name}
-                      control={control}
-                      rules={{
-                        ...item.validationobj,
-                      }}
-                      render={({ field, fieldState, formState }) => (
-                        <React.Suspense fallback={<div>Loading...</div>}>
-                          <CalenderInput
-                            field={field}
-                            fieldState={fieldState}
-                            formState={formState}
-                            item={item}
-                          />
-                          {fieldState.error && (
-                            <div className="form-text text-danger">
-                              {fieldState.error.message}
-                            </div>
-                          )}
-                        </React.Suspense>
-                      )}
-                    />
-                      
+                        name={item.name}
+                        control={control}
+                        rules={{
+                          ...item.validationobj,
+                        }}
+                        render={({ field, fieldState, formState }) => {
+                          console.log(fieldState.error, 'error', field.name);
+                          return (
+                            <React.Suspense fallback={<div>Loading...</div>}>
+                              <CalenderInput
+                                field={field}
+                                fieldState={fieldState}
+                                formState={formState}
+                                item={item}
+                              />
+                              {fieldState.error && (
+                                <div className="form-text text-danger">
+                                  {fieldState.error.message}
+                                </div>
+                              )}
+                            </React.Suspense>
+                          )
+                        }}
+                      />
+
                     )
                   }
 
                   {item.type === "arrayform" && (
                     <div>
                       <div
-                        className={`${
-                          item.arrayformclass ? item.arrayformclass : `row mb-2`
-                        }`}
+                        className={`${item.arrayformclass ? item.arrayformclass : `row mb-2`
+                          }`}
                       >
                         {fields.map((field, formIndexArray) => {
                           return (
@@ -514,15 +524,6 @@ function FormDynamic(props: FormInput) {
                     </div>
                   )}
 
-                  {errors[item.name] &&
-                    item.type !== "password" &&
-                    item.type !== "radio" &&
-                    item.type !== "checkbox" && (
-                      <div className="invalid-feedback">
-                        {errors[item.name]?.message as React.ReactNode}
-                      </div>
-                    )}
-
                   {item.somemsg && (
                     <div className="form-text">{item.somemsg}</div>
                   )}
@@ -533,15 +534,14 @@ function FormDynamic(props: FormInput) {
           {extendForm && extendForm}
           <div
             className={`mt-3 col-12 col-md-12
-            ${
-              btnPosition === "start"
+            ${btnPosition === "start"
                 ? "text-start"
                 : btnPosition === "center"
-                ? "text-center"
-                : btnPosition === "end"
-                ? "text-end"
-                : "text-center"
-            } `}
+                  ? "text-center"
+                  : btnPosition === "end"
+                    ? "text-end"
+                    : "text-center"
+              } `}
           >
             <button
               type="submit"
@@ -580,7 +580,7 @@ function FormDynamic(props: FormInput) {
                     if (iterator.type !== "textarea") {
                       reset({ [iterator.name]: "" });
                     }
-                    else{
+                    else {
                       reset({ [iterator.name]: "<p></p>" });
                     }
                   }

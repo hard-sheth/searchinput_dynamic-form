@@ -9,7 +9,7 @@ import {
   FieldValues,
   UseFormStateReturn,
 } from "react-hook-form";
-import { CalenderPropInput, isHourValid, ParticularDay } from "../../utils/calender";
+import { CalenderPropInput, isDateValid, isHourValid, ParticularDay } from "../../utils/calender";
 import { CustomHeader } from "../Calender/CalenderHeader";
 
 type CalenderProps = {
@@ -20,7 +20,6 @@ type CalenderProps = {
 };
 function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
   if (item.type === "date") {
-    const [removeDates, setRemoveDates] = React.useState([])
     const isWeekday = (date: Date) => {
       const weekDay = moment(date).weekday() as ParticularDay;
       if (item.weekendOff) {
@@ -38,9 +37,7 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         return true;
       }
     };
-    const Dateselect = moment('2024-07-30').toString()
-    console.log(item.excludeDates, 'exclude date', Dateselect);
-
+    
     return (
       <div className="w-100">
         <DatePicker
@@ -127,37 +124,82 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
 
       return timeIntervalArray;
     };
+    const listOfDates: string[] = [];
+    const listOfTimes: any = [];
+    if (item.excludeDatesList) {
+      for (const excludeDateList of item.excludeDatesList) {
+        if (isDateValid(excludeDateList.date)) {
+          const isValidTime = excludeDateList.time.reduce((previous, current) => {
+            if (previous === true || (isHourValid(current[0]) && isHourValid(current[1]))) {
+              return true;
+            } else {
+              return false;
+            }
+          }, false)
+          if (isValidTime) {
+            listOfDates.push(moment(excludeDateList.date).format('DD/MM/YYYY'));
+            listOfTimes.push(excludeDateList.time);
+          }
+        } else {
+          continue;
+        }
+      };
+    };
+
     const filterPassedTime = (time: Date) => {
       const momentselectedDate = moment(time).format("H:mm");
       const weekDay = moment(time).weekday() as ParticularDay;
-      console.log(item.particlarDayTime, 'item.removeParticularDaysTime', item.particularDaysTiming);
-
-      if (item.particularDaysTiming && item.particlarDayTime) {
+      const dateSelect: string = moment(time).format('DD/MM/YYYY');
+      const timeInterval = particularDayTime(dateSelect);
+      function onDateSelectTime() {
+        return timeInterval.includes(momentselectedDate)
+      }
+      if (item.particularDaysTiming && item.particularDayTime) {
         const timeIntervalArrayWeekend = getTimeIntervalArray(
           item.particularDaysTiming
         );
-        console.log(item.timeBreak, weekDay,'timebreak', timeIntervalArrayWeekend,timeIntervalArrayWeekend.includes(momentselectedDate) && item.particlarDayTime.includes(weekDay),'weeks');
-        if(item.particlarDayTime.includes(weekDay)){
+        if (item.particularDayTime.includes(weekDay)) {
           if (timeIntervalArrayWeekend.includes(momentselectedDate)) {
-            console.log('show some day time');
-            
-            return true
+            if (timeInterval.length > 0) {
+              return onDateSelectTime()
+            }
+            else {
+              return true;
+            }
           } else {
-            console.log('hode some day time');
             return false
           }
         }
-        else{
-          console.log('normal days');
-          
-          return true
+        else {
+          if (timeInterval.length > 0) {
+            return onDateSelectTime()
+          }
+          else {
+            return true;
+          }
         }
-        // return timeIntervalArrayWeekend.includes(momentselectedDate) && item.particlarDayTime.includes(weekDay) ? true : false;
       } else {
-        console.log('normal');
-        return true;
+        if (timeInterval.length > 0) {
+          return onDateSelectTime()
+        }
+        else {
+          return true;
+        }
       }
     };
+
+    function particularDayTime(dateString: string) {
+      if (listOfDates.includes(dateString)) {
+        const positionOfDate = listOfDates.findIndex((date) => date == dateString);
+        const data = listOfTimes[positionOfDate];
+        const intevalsList = getTimeIntervalArray(
+          data
+        );
+        return intevalsList;
+      } else {
+        return [];
+      }
+    }
 
     return (
       <DatePicker
@@ -180,6 +222,7 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         }}
         filterTime={filterPassedTime}
         showTimeSelect
+        selected={field.value!= ''?field.value:undefined}
         isClearable={true}
         excludeDates={item.excludeDates}
         minTime={moment().set('hour', item.minTime && isHourValid(item.minTime) ? Number(item.minTime.split(':')[0]) : 0).set('minute', item.minTime && isHourValid(item.minTime) ? Number(item.minTime.split(':')[1]) : 0).set('second', 0).toDate()}

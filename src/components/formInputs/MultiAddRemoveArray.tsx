@@ -10,7 +10,6 @@ import {
   inputTypesDiffDynamic,
   SelectOptionsDynamic,
 } from "../DynamicFormUpdate";
-const PasswordInput = React.lazy(() => import("./PasswordInput"));
 type ArrayForm = {
   update?: any;
   index: number;

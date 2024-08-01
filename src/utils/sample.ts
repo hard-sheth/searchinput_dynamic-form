@@ -1,6 +1,6 @@
 import { CalenderPropInput } from "./calender";
 
-type InputfieldsOptions = {
+type InputfieldsOptionsParameters = {
     lable?: string | JSX.Element;
     lableClass?: string;
     placeholder?: string;
@@ -18,8 +18,34 @@ type InputfieldsOptions = {
     value?: any;
     maxInput?: number;
     minInput?: number;
+    dependableFormName?: string;
   };
+
+  export type DependableForm = {
+    dependableFormName: string;
+    operation: 'compare'|'greater'|'smaller'|'greaterequal'|'smallerequal'|'notequal';
+    dependableType: 'Number'| 'Date'| 'String';
+    dependableFormError: string
+  }
+
+  export type DependableFormPromise = DependableForm & {
+    dependableFormName: string;
+    operation: "Promise";
+    dependablePromise: (
+      currentField: any,
+      dependantField: any
+    ) => true | string;
+  };
+
+  export type NotDependableForm = {
+    dependableFormName?: undefined;
+    operation: never;
+    dependableType: never;
+  }
   
+  type InputfieldsOptions = InputfieldsOptionsParameters &
+    (DependableForm | DependableFormPromise | NotDependableForm);
+
   type Inputfields<T> = T & {
     successValidation?: boolean; // This property controls the presence of dependentProperty
 } & (T extends { successValidation: true }
