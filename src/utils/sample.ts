@@ -28,8 +28,7 @@ type InputfieldsOptionsParameters = {
     dependableFormError: string
   }
 
-  export type DependableFormPromise = DependableForm & {
-    dependableFormName: string;
+  export type DependableFormPromise = Omit<DependableForm, 'operation'>  & {
     operation: "Promise";
     dependablePromise: (
       currentField: any,
@@ -39,12 +38,18 @@ type InputfieldsOptionsParameters = {
 
   export type NotDependableForm = {
     dependableFormName?: undefined;
-    operation: never;
-    dependableType: never;
+    operation?: never;
+    dependableType?: never;
   }
   
   type InputfieldsOptions = InputfieldsOptionsParameters &
-    (DependableForm | DependableFormPromise | NotDependableForm);
+    // (DependableForm | DependableFormPromise | NotDependableForm);
+    (
+      | ((DependableForm | DependableFormPromise) & {
+          dependableFormName: string;
+        })
+      | NotDependableForm
+    );
 
   type Inputfields<T> = T & {
     successValidation?: boolean; // This property controls the presence of dependentProperty

@@ -74,6 +74,7 @@ function FormDynamic(props: FormInput) {
     formState: { errors },
     handleSubmit,
     reset,
+    getValues
   } = useForm();
 
   const formArrayDetail = formDetails.filter((item) => {
@@ -178,6 +179,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -198,6 +226,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -217,6 +272,80 @@ function FormDynamic(props: FormInput) {
                     <Controller
                       name={`${item.name}`}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                            if (item.dependableType === 'Number') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'greater') {
+                                if (dependableFormValue > formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'smaller') {
+                                if (dependableFormValue < formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'greaterequal') {
+                                if (dependableFormValue >= formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'smallerequal') {
+                                if (dependableFormValue <= formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       control={control}
@@ -238,6 +367,80 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                            if (item.dependableType === 'Number') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'greater') {
+                                if (dependableFormValue > formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'smaller') {
+                                if (dependableFormValue < formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'greaterequal') {
+                                if (dependableFormValue >= formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'smallerequal') {
+                                if (dependableFormValue <= formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -258,6 +461,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -278,6 +508,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -298,6 +555,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -318,6 +602,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -339,6 +650,32 @@ function FormDynamic(props: FormInput) {
                         name={item.name}
                         control={control}
                         rules={{
+                          validate: (formdata: any) => {
+                            if (item.dependableFormName) {
+                              const dependableFormValue = getValues(item.dependableFormName);
+                              if (item.dependableType === 'String') {
+                                if (item.operation === 'compare') {
+                                  if (dependableFormValue === formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'notequal') {
+                                  if (dependableFormValue !== formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'Promise') {
+                                  return item.dependablePromise(formdata, dependableFormValue);
+                                }
+                              }
+                            } else {
+                              return true
+                            }
+                          },
                           ...item.validationobj,
                         }}
                         render={({ field, fieldState, formState }) => (
@@ -412,6 +749,32 @@ function FormDynamic(props: FormInput) {
                         name={item.name}
                         control={control}
                         rules={{
+                          validate: (formdata: any) => {
+                            if (item.dependableFormName) {
+                              const dependableFormValue = getValues(item.dependableFormName);
+                              if (item.dependableType === 'String') {
+                                if (item.operation === 'compare') {
+                                  if (dependableFormValue === formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'notequal') {
+                                  if (dependableFormValue !== formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'Promise') {
+                                  return item.dependablePromise(formdata, dependableFormValue);
+                                }
+                              }
+                            } else {
+                              return true
+                            }
+                          },
                           ...item.validationobj,
                         }}
                         render={({ field, fieldState, formState }) => (
@@ -439,6 +802,33 @@ function FormDynamic(props: FormInput) {
                       name={item.name}
                       control={control}
                       rules={{
+                        validate: (formdata: any) => {
+                          if (item.dependableFormName) {
+                            const dependableFormValue = getValues(item.dependableFormName);
+                            if (item.dependableType === 'String') {
+                              if (item.operation === 'compare') {
+                                if (dependableFormValue === formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'notequal') {
+                                if (dependableFormValue !== formdata) {
+                                  return true;
+                                } else {
+                                  return item.dependableFormError;
+                                }
+                              }
+                              else if (item.operation === 'Promise') {
+                                return item.dependablePromise(formdata, dependableFormValue);
+                              }
+                            }
+                          }
+                          else {
+                            return true;
+                          }
+                        },
                         ...item.validationobj,
                       }}
                       render={({ field, fieldState, formState }) => (
@@ -465,6 +855,101 @@ function FormDynamic(props: FormInput) {
                         name={item.name}
                         control={control}
                         rules={{
+                          validate: (formdata: any) => {
+                            console.log(item.name, `how can we implement date`, item.dependableFormName);
+                            if (item.dependableFormName) {
+                              debugger;
+                              let dependableFormValue = getValues(item.dependableFormName);
+                              if (item.dependableType === 'String') {
+                                if (item.operation === 'compare') {
+                                  if (dependableFormValue === formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'notequal') {
+                                  if (dependableFormValue !== formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'Promise') {
+                                  return item.dependablePromise(formdata, dependableFormValue);
+                                }
+                              }
+                              else if (item.dependableType === 'Date') {
+                                dependableFormValue = new Date(dependableFormValue);
+                                if (item.operation === 'compare') {
+                                  if (dependableFormValue === formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'notequal') {
+                                  if (dependableFormValue !== formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'greater') {
+                                  if (dependableFormValue > formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'smaller') {
+                                  if (dependableFormValue < formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'smallerequal') {
+                                  if (dependableFormValue <= formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'greaterequal') {
+                                  if (dependableFormValue >= formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'Promise') {
+                                  return item.dependablePromise(formdata, dependableFormValue);
+                                }
+                              }
+                              else if (item.dependableType === 'Number') {
+                                if (item.operation === 'compare') {
+                                  if (dependableFormValue === formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'notequal') {
+                                  if (dependableFormValue !== formdata) {
+                                    return true;
+                                  } else {
+                                    return item.dependableFormError;
+                                  }
+                                }
+                                else if (item.operation === 'Promise') {
+                                  return item.dependablePromise(formdata, dependableFormValue);
+                                }
+                              }
+                            } else {
+                              return true
+                            }
+                          },
                           ...item.validationobj,
                         }}
                         render={({ field, fieldState, formState }) => {
@@ -607,7 +1092,15 @@ function FormDynamic(props: FormInput) {
                   //     reset({ [iterator.name]: "<p></p>" });
                   //   }
                   // }
-                  reset();
+                  // reset();
+                  for (const iterator of formDetails) {
+                    if (iterator.type !== "textarea") {
+                      reset({ [iterator.name]: "" });
+                    }
+                    else {
+                      reset({ [iterator.name]: "<p></p>" });
+                    }
+                  }
                 }}
               >
                 {resetFormBtn}

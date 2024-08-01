@@ -43,10 +43,16 @@ type CalenderProp = {
   maininputclass?: string;
   value?: unknown;
   excludeDates?: Date[];
+  dependableFormName?: string;
 };
 
 type CalenderPropInputProp = CalenderProp &
-  (DependableForm | DependableFormPromise | NotDependableForm);
+  (
+    | ((DependableForm | DependableFormPromise) & {
+        dependableFormName: string;
+      })
+    | NotDependableForm
+  );
 
 /**
  * Parameters for Calendar for only Dates.
