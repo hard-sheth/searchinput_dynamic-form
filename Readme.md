@@ -855,3 +855,7 @@ For the Calender we have used moment library. Where we have declared the above p
         2. '13:30' to '18:30'  
     time will be selected `'8:30 AM'` to `'12:30 PM'` & `'1:30 PM'` to `'6:30 PM'`
 - **Description**: On mentioned date whatever time mentioned than it will select time between them. 
+
+# Screen Shot Calendar Inputs
+![NormalCalendar](https://raw.githubusercontent.com/hard-sheth/searchinput_dynamic-form/main/NormalCalendar.png)
+![DateTime](https://raw.githubusercontent.com/hard-sheth/searchinput_dynamic-form/main/dateTime.png)
