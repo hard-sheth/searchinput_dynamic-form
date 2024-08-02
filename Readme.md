@@ -152,6 +152,7 @@ Here you can get the two Components
 - Dynamic Form.
 - Table
 - Calender
+- FormDynamic
 
 above example is Dynamic Form Example. You can find below attached screen shot to see it's output.
 
@@ -667,91 +668,190 @@ function App() {
 }
 ```
 
-#### Calender Properties
-
-    minDate?: Date;
-
-    maxDate?: Date;
-
-    holidays?: [Holiday];
-
-    icons?: JSX.Element;
-
-    removeParticularDays?: [ParticularDay];
-
-    removeParticularDaysTime?: [String];
-
-    weekendOff: Boolean;
-
-    name?: String;
-
-    onBlur?: any;
-
-    onChange: (event: any) => void;
-
-    ref: (elm: any) => void;
-
-    value?: undefined;
-
-    error?: Boolean;
-
-    showTime: boolean;
-
-    startYear?: number;
-
-    endYear?: number;
-
-    showIcon?: boolean;
-
-    removeTime?: any;
-
-    dateFormat?: string;
-
-    timeIntervals?: number;
-
-    showBottomTime?: boolean;
-
-    excludeTime?: [any];
-
-    timeBreak: string[][];
-    
-    dateRange?: boolean;
-    
-    multiDateSelect?: boolean;
-
-```typescript
-type Holiday = {
-    date: string;
-    holidayName: string;
-};
-```
+# Calender Input Properties
 
 For the Calender we have used moment library. Where we have declared the above properties which are used for Calender Component. For Calender purpose we have used properties which are used for the Calender.
-
-removeParticularDays: Here we declared  
-        0 | 1 | 2 | 3 | 4 | 5 | 6
-
         
-| Prop name | Default Values     | Description                |Example Values
-| :-------- | :------- | :------------------------- | :------- 
-| minDate | n/a | It should be date string |optional
-| maxDate | n/a | It should be date string |optional
-|holidays|n/a|From these it is an array where we can pass the holidays.|optional
-|dateFormat|n/a|Here We have to pass the date format should dd/MM/YYYY|`DD-MM-YYYY`|
-|removeParticularDays|[]|It is optiona Array where value should be between the 0 to 6 where 0 stands Sunday, 1 for Monday and so on...|optional
-|weekendOff|n/a(Boolean)|Here we can off the Saturday & Sunday| optional
-particlarDayTimes|n/a|Here we have passed the day where we have some other time/ special time for that day of week. For example [6] which stands for Saturday.|optional
-removeParticularDaysTime|n/a|likw we ha ve an array where what should be time| [[10:00,13:00],[15:00,18:00]]
-|showTime|boolean|Time select shown or not.|false
-|startYear|number|End of the year.|1930
-|endYear|number|End of the year.|2024
-|showIcon|boolean|icon should be displayed or not.|true|
-|timeIntervals|number|Where number of time should displayed.|30
-|showBottomTime|boolean|at the bottom time should displayed or not.|false|
-|timeBreak|string[][]|Time should of week where we have what kind of start & end time.|[[10:00,13:00][15:00,20:00]]
-|changeDate|()=>void|It where we can send the promise based on date selected|optional|
-|dateRange|boolean|When want to select multiple date from start date to end date all date should be covered at that time|optional|
-|multiDateSelect|boolean|When want to select multiple date.|optional|
 
+### Breakdown of the Enhancements Calendar
+#### minDate :  `string`
+
+- **Type**: `string`| `undefined`
+- **Format**: The date should be provided in the ISO 8601 format (YYYY-MM-DD). For example, `"2024-01-01"` represents January 1, 2024.
+- **Description**: Minimum date which can be selected from Calendar.
+
+#### maxDate :  `string`
+
+- **Type**: `string`| `undefined`
+- **Format**: The date should be provided in the ISO 8601 format (YYYY-MM-DD). For example, `"2024-01-01"` represents January 1, 2024.
+- **Description**: Maximum date which can be selected from Calendar.
+#### holidays :  `Array.<Holiday>`
+
+- **Type**: `Array.<Holiday>`|`undefined`
+- **Format**: ```type Holiday =  {date: string ,holidayName: string } ```
+- **Description**: Array of holidays. Which can be useful when hover on date. holidayName will display on calendar.
+
+#### dateFormat: `string`
+- **Type**: `string`
+- **Format**: 
+    | formatDate | Description
+    | :-------- | :------- 
+    | MMMM | Display full name month.
+    | yyyy | Full Year.
+    | yy | year displau like 24.
+    | MM | no of month like 01,02 like that.
+    | aa | Display am or pm.
+    | H | In 24 hour format.
+    | h | In 12 hour format.
+    | mm | Display Minutes.
+    | d | date display.
+    | ad | date in double digit display.
+- **Description**: When display on calendar input what kind of value should appear on input. Combination of above format will be applied in property dateFormat.
+
+#### startYear: `number`|`undefined`
+- **Type**: `number`|`undefined`
+- **Format**: The year should be applied in number. For example `2024` represents year 2024.
+- **Description**: In Calendar we get dropdown year start from startYear provided number.
+- **Default**: 1950
+
+#### endYear: `number`|`undefined`
+- **Type**: `number`|`undefined`
+- **Format**: The year should be applied in number. For example `2024` represents year 2024.
+- **Description**: In Calendar we get dropdown year last year which is available to select in calendar is endYear.
+- **Default**: Current year
+
+#### weekendOff: `boolean`|`undefined`
+- **Type**:  `boolean`|`undefined`
+- **Format**: `true`|`false`|`undefined`
+- **Description**:On weekend we want to disable seletion of date is disabled.
+- **Default**: Current year
   
+#### icons: `JSX.Element`|`undefined`
+- **Type**: `JSX.Element`|`undefined`
+- **Format**: Currently it has support of react-icons libary.
+- **Description**: Want to change the Icon of calendar.
 
+#### removeParticularDays: `Array.<number>`|`undefined`
+- **Type**: `Array.<number>`|`undefined`
+- **Format**: Provided in array<number>. For example [0,6]. number should between 0-6.
+- **Description**: To disable date selection of particualr day of week. For example [3] is passed than Wednesday dates can't be selected.
+
+#### showIcon: `boolean`|`undefined`
+- **Type**: `boolean`|`undefined`
+- **Format**: `true`|`false`.
+- **Description**: To display icon on input of calendar.
+
+#### name : `string`
+- **Type**: Requried
+- **Format**: `string`.
+- **Description**: Name of property.
+
+#### label: `string`| `JSX.Element`|`undefined`
+- **Type**: Optional
+- **Format**: `string`| `JSX.Element`.
+- **Description**: Name of property.
+
+#### labelClass: `string`|`undefined`
+- **Type**: Optional
+- **Format**: `string`.
+- **Description**: Class is applied over form-label .
+
+#### validationobj: `object`|`undefined`
+- **Type**: Optional
+- **Format**: `object`.
+- **Description**: We want to apply validation. To learn more about it review `https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation`
+
+#### somemsg: `string`| `JSX.Element`|`undefined`
+- **Type**: Optional
+- **Format**: `string`| `JSX.Element`.
+- **Description**: Below input element want to display something.
+
+#### maininputclass: `string`|`undefined`
+- **Type**: Optional
+- **Format**: `string`.
+- **Description**: Class is applied over parent element. Class is applied over top of input & label.
+
+#### excludeDates `Array.<Date>`|`undefined`
+- **Type**: Optional
+- **Format**: Provided in array<Date>. For example [`new Date()`].
+- **Description**: To disable date selection for particualr dates.
+
+#### value:`any`|`undefined`
+- **Type**: Optional
+- **Format**: any.
+- **Description**: Value of input
+
+#### dependableFormName: `string`|`undefined`
+- **Type**: Optional
+- **Format**: Provided in array<Date>. For example [`new Date()`].
+- **Description**: To know the value of other form input. For example we have two inputs which are account no & confirm account no. We want to knoe value of account no in  confirm account no input form.
+
+#### operation: `string`|`never`
+- **Type**: Optional
+- **Format**: `compare`|`greater`|`smaller`|`greaterequal`|`smallerequal`|`notequal`|`Promise`|`never`.
+- **Description**: Based on dependableFormName value & current input value. If dependableFormName property declared than operation is **Requried**.
+
+#### dependableType: `string`|`never`
+- **Type**: Optional
+- **Format**: `Number`| `Date`| `String`|`never`.
+- **Description**: dependableFormName value type. If dependableFormName property declared than operation is **Requried**.
+
+#### dependableFormError: `string`|`never`
+- **Type**: Optional
+- **Format**: `string`|`never`.
+- **Description**: dependable input field validation failed or got an error. If dependableFormName property declared than operation is **Requried**.
+
+#### dependablePromise: `any`|`never`
+- **Type**: Optional
+- **Format**: 
+    ```
+    (
+        currentField: any,
+        dependantField: any
+    ) => true | string
+    ```
+- **Description**: dependable operation is Promise than dependablePromise is **Requried**.
+
+#### type: `string`
+- **Type**: Requried
+- **Format**: `date`|`datetime`|`daterange`.
+- **Description**: based on these properties input will be updated.
+#### timeIntervals: `number`
+- **Type**: Requried
+- **Format**: number. For example 60 represents `1-2 am` like this.
+- **Description**: In calendar to select time from 12 am to 12 pm. 
+
+#### minTime: `string`
+- **Type**: Optional
+- **Format**: `string`|`undefined`.
+- **Description**: minimum time which can be selected from calendar.
+#### maxTime: `string`
+- **Type**: Optional
+- **Format**: `string`|`undefined`.
+- **Description**: maximum time which can be selected from calendar
+#### particularDayTime:  Array<number>`
+- **Type**: Optional
+- **Format**: ` Array<number>`|`undefined`.
+- **Description**: Provided in array<number>. For example [0,6]. number should between 0-6.
+#### particularDaysTiming: `Array<Array<string>>`
+- **Type**: Optional
+- **Format**: `Array<Array<string>>`|`undefined`. For example `[['8:30','16:30']]` represents time 8:30 AM to 4:30 PM
+- **Description**: Based on timing like 8:30 to 16:30 one break.particularDayTime mentioned than these property **Requried**
+#### excludeDatesList: `
+- **Type**: Optional
+- **Format**:
+    For example
+
+     ```
+    date: '2024-08-01',
+    time: [
+                ['8:30','12:30'],
+                ['13:30','18:30'],
+           ]
+    ``` 
+    represents on date `"2024-08-01"`. We have timeing
+        
+        1. '8:30' to '12:30'
+        2. '13:30' to '18:30'  
+    time will be selected `'8:30 AM'` to `'12:30 PM'` & `'1:30 PM'` to `'6:30 PM'`
+- **Description**: On mentioned date whatever time mentioned than it will select time between them. 

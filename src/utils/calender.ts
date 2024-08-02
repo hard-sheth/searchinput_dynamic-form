@@ -24,8 +24,8 @@ type Holiday = {
  */
 
 type CalenderProp = {
-  minDate?: Date;
-  maxDate?: Date;
+  minDate?: string;
+  maxDate?: string;
   holidays?: Holiday[];
   dateFormat?: string;
   startYear?: number;
@@ -35,9 +35,8 @@ type CalenderProp = {
   removeParticularDays?: ParticularDay[];
   showIcon?: boolean;
   name: string;
-  lable?: string | JSX.Element;
-  lableClass?: string;
-  placeholder?: string;
+  label?: string | JSX.Element;
+  labelClass?: string;
   validationobj?: object;
   somemsg?: string | JSX.Element;
   maininputclass?: string;
@@ -93,8 +92,7 @@ export type CalnderDateRange = CalenderPropInputProp & {
 
 export type CalnderDateTimeProps = CalenderPropInputProp & {
   type: "datetime";
-  timeBreak?: string[][];
-  excludeTime?: [];
+  // timeBreak?: string[][];
   timeIntervals: number;
   minTime?: string;
   maxTime?: string;

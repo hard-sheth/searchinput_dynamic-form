@@ -1,25 +1,25 @@
 import { CalenderPropInput } from "./calender";
 
 type InputfieldsOptionsParameters = {
-    lable?: string | JSX.Element;
-    lableClass?: string;
-    placeholder?: string;
-    validation?: boolean;
-    rightplaceText?: string | JSX.Element;
-    leftplaceText?: string | JSX.Element;
-    rightClass?: string;
-    leftClass?: string;
-    classinput?: string;
-    maininputclass?: string;
-    validationobj?: object;
-    name: string;
-    defaultvalue?: string;
-    somemsg?: string | JSX.Element;
-    value?: any;
-    maxInput?: number;
-    minInput?: number;
-    dependableFormName?: string;
-  };
+  label?: string | JSX.Element;
+  labelClass?: string;
+  placeholder?: string;
+  validation?: boolean;
+  rightplaceText?: string | JSX.Element;
+  leftplaceText?: string | JSX.Element;
+  rightClass?: string;
+  leftClass?: string;
+  classinput?: string;
+  maininputclass?: string;
+  validationobj?: object;
+  name: string;
+  defaultvalue?: string;
+  somemsg?: string | JSX.Element;
+  value?: any;
+  maxInput?: number;
+  minInput?: number;
+  dependableFormName?: string;
+};
 
   export type DependableForm = {
     dependableFormName: string;

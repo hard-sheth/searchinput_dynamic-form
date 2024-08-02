@@ -62,6 +62,8 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
           }}
           isClearable={true}
           excludeDates={item.excludeDates}
+          minDate={item.minDate && isDateValid(item.minDate) ?  new Date(item.minDate) : undefined }
+          maxDate={item.maxDate && isDateValid(item.maxDate) ? new Date(item.maxDate) : undefined }
         />
       </div>
     );
@@ -108,6 +110,8 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         }}
         isClearable={true}
         excludeDates={item.excludeDates}
+        minDate={item.minDate && isDateValid(item.minDate) ?  new Date(item.minDate) : undefined }
+        maxDate={item.maxDate && isDateValid(item.maxDate) ? new Date(item.maxDate) : undefined }
       />
     );
   } else if (item.type === "datetime") {
@@ -225,6 +229,8 @@ function CalenderInput({ field, fieldState, formState, item }: CalenderProps) {
         selected={field.value!= ''?field.value:undefined}
         isClearable={true}
         excludeDates={item.excludeDates}
+        minDate={item.minDate && isDateValid(item.minDate) ?  new Date(item.minDate) : undefined }
+        maxDate={item.maxDate && isDateValid(item.maxDate) ? new Date(item.maxDate) : undefined }
         minTime={moment().set('hour', item.minTime && isHourValid(item.minTime) ? Number(item.minTime.split(':')[0]) : 0).set('minute', item.minTime && isHourValid(item.minTime) ? Number(item.minTime.split(':')[1]) : 0).set('second', 0).toDate()}
         maxTime={moment().set('hour', item.maxTime && isHourValid(item.maxTime) ? Number(item.maxTime.split(':')[0]) : 23).set('minute', item.maxTime && isHourValid(item.maxTime) ? Number(item.maxTime.split(':')[1]) : 59).set('second', 59).toDate()}
       />
