@@ -86,18 +86,18 @@ function MultiItemForm({
             id={`ArrayformInput-${index}-${indexOfForm}`}
             key={indexOfForm}
           >
-            {item.lable && (
+            {item.label && (
               <label
                 className={`form-label ${
-                  item.lableClass ? item.lableClass : ""
+                  item.labelClass ? item.labelClass : ""
                 }`}
               >
-                {typeof item.lable === "string" && item.lable
-                  ? item.lable?.split(/\*/)[0]
-                  : item.lable}
+                {typeof item.label === "string" && item.label
+                  ? item.label?.split(/\*/)[0]
+                  : item.label}
                 <span className="text-danger">
-                  {typeof item.lable === "string" &&
-                  item.lable?.split(/\*/)?.length > 1
+                  {typeof item.label === "string" &&
+                  item.label?.split(/\*/)?.length > 1
                     ? "*"
                     : ""}
                 </span>

@@ -1,14 +1,12 @@
 import * as React from "react";
 import { useRef, useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import AddressOptionCard from "./Calender/AddressOptionCard";
 
-interface SelectOptionsLabel {
-  label: string;
-  value?: string | unknown | any;
-}
-
-interface SelectOptionsLbl extends SelectOptionsLabel {
-  options?: SelectOptionsLabel[];
+export interface AddressProps {
+  placeaddress: string;
+  placeName: string;
+  placeIcon?: JSX.Element;
 }
 
 interface SearchOptionsProps {
@@ -17,14 +15,14 @@ interface SearchOptionsProps {
   btnText: JSX.Element;
   startSearch?: "click" | "type";
   optionNullMsg?: JSX.Element;
-  selectOptions: SelectOptionsLabel[] | SelectOptionsLbl[] | [];
+  selectOptions: AddressProps[] | [];
   updateText: (enterString: unknown | string) => void;
   isLoading: boolean;
   isReload: () => void;
   classSearch?: string;
 }
 
-function SearchOptions({
+function AddressInput({
   loadingText,
   btnPlace,
   btnText,
@@ -62,6 +60,11 @@ function SearchOptions({
     }
     updateText(selectValue)
   }, [selectValue]);
+
+  const updateAddress = (item: Omit<AddressProps,'placeIcon'>)=>{
+    setSelectValue(item.placeName)
+  }
+
   return (
     <div className="position-relative">
       <div className={`input-group border border-1 ${classSearch ? classSearch : 'rounded'}`}>
@@ -129,28 +132,22 @@ function SearchOptions({
       </div>
       {showOptions && (
         <div
-          className="position-absolute rounded mt-2 w-100 bg-white border border-1"
+          className="position-absolute list-group rounded mt-2 w-100 bg-white border border-1 z-1"
           style={{
             overflowY: 'auto',
             maxHeight: '250px'
           }}
           ref={ref}
         >
-          {selectOptions?.length > 0 &&
-            selectOptions.map((item: SelectOptionsLabel, index: any) => {
-              return (
-                <div
-                  key={index}
-                  className={`ps-4 `}
-                  onClick={() => {
-                    setSelectValue(item.value);
-                    setShowOptions(false);
-                  }}
-                >
-                  {item.label}
-                </div>
-              );
-            })}
+          {/* <li>
+</li> */}
+            {selectOptions?.length > 0 &&
+              selectOptions.map((item, index: number) => {
+                return (
+                 <AddressOptionCard {...item} index={index} onchageAddress={updateAddress} />
+                );
+              })}
+          
           {selectOptions.length == 0 && (
             <div className="text-center py-3">{optionNullMsg}</div>
           )}
@@ -161,4 +158,4 @@ function SearchOptions({
   );
 }
 
-export { SearchOptions };
+export { AddressInput };
