@@ -87,15 +87,15 @@ type InputfieldsOptionsParameters = {
     isMulti?: boolean;
     maxOptions?: number;
     inputchange?: (data: string) => {};
-    url?: string;
-    createable?: boolean;
+    // url?: string;
+    // createable?: boolean;
     optionPromise?: () => void;
     // Promise<SelectOptions[]>
   };
   
   type SelectDependable = Inputfields<InputfieldsOptions> & {
     type: "dependabledropdown";
-    url?: string;
+    // url?: string;
     previousSelect: string;
     options: SelectOptionsDynamic[];
     isMulti: boolean;

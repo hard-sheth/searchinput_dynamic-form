@@ -796,18 +796,20 @@ For the Calender we have used moment library. Where we have declared the above p
 
 #### type: `string`
 - **Type**: Required
-- **Format**:  `text`| `search`| `textarea`| `telephone`| `password`| `email`| `searchoption`|`switch`| `radio`| `checkbox`| `select`| `dependabledropdown`| `voicetext` |`file`.
+- **Format**:  `text`| `search`| `textarea`| `telephone`| `password`| `email`| `searchoption`|`switch`| `radio`| `checkbox`| `select`| `dependabledropdown`| `voicetext` |`file`| `float`| `secure`| `number`| `arrayform`.
 - **Description**: based on these properties input will be updated.
+
+### file Properties
 
 #### isMulti: `boolean`
 - **Type**: Required
 - **Format**: `boolean`.
-- **Description**: Allow multiple file in input.
+- **Description**: Allow multiple file in input. If type property equal to file than isMulti is **Required**.
 
 #### isPreview: `boolean`
 - **Type**: Required
 - **Format**: `boolean`.
-- **Description**: Kind of file type according to type show file type.
+- **Description**: Kind of file type according to type show file type. If type property equal to file than isPreview is **Required**.
 
 #### maxFile: `number`
 - **Type**: Optional
@@ -822,17 +824,84 @@ For the Calender we have used moment library. Where we have declared the above p
 #### clearable: `boolean`
 - **Type**: Required
 - **Format**: `boolean`.
-- **Description**: Want to remove the file from preview of file type.
+- **Description**: Want to remove the file from preview of file type. If type property equal to file than clearable is **Required**.
 
 #### square: `boolean`
 - **Type**: Required
 - **Format**: `boolean`.
-- **Description**: Input type is hidden & square should be considerate.
+- **Description**: Input type is hidden & square should be considerate. If type property equal to file than square is **Required**.
 
 #### accept: `string`| `undefined`
 - **Type**: Optional
 - **Format**: `string` | `undefined`.
 - **Description**: What kind of file type should be excepted.
+
+### secure Properties
+
+#### inputType: `number`| `text`
+- **Type**: Required
+- **Format**: `number`| `text`.
+- **Description**: When type is secure than. If number is than only number is allowed. In the text we have also normal text with input type password.
+
+### checkbox Properties
+
+#### label: `JSX.Element`| `string`
+- **Type**: Required
+- **Format**: `JSX.Element`| `string`.
+- **Description**: In the input type checkbox. In the checbox right side text display.
+
+### select Properties
+
+#### isMulti: `boolean`| `undefined`
+- **Type**: Optional
+- **Format**: `boolean`| `undefined`.
+- **Description**: In the select we can select multiple options. 
+
+#### maxOptions: `number`| `undefined`
+- **Type**: Optional
+- **Format**: `number`| `undefined`.
+- **Description**: maximum No of Options which can be selected from select element.
+
+#### inputchange: `function`| `undefined`
+- **Type**: Optional
+- **Format**: 
+```
+    (
+        data: string,
+    ) => void
+```
+- **Description**: In select when we are type someting at that time want to create/filter options.
+
+#### optionPromise: `function`| `undefined`
+- **Type**: Optional
+- **Format**: `() => void`
+- **Description**: In select when we are type someting at that time want to create/filter options.
+
+#### options: `Array.<label:string, value: string>`
+- **Type**: `string`
+- **Format**: 
+    | formatDate | Description
+    | :-------- | :------- 
+    | label | type: **string**
+    | value | type: **string**
+- **Description**: In option we have label & value both are string. In options list of promise.
+
+### radio Properties
+
+#### placeForLabel: `string`
+- **Type**: Required
+- **Format**: `inline`| `new line`.
+- **Description**: Either in new list Or in same line.
+
+#### radioOptions: `Array.<label:string, value: string>`
+- **Type**: Optional
+- **Format**: 
+    | formatDate | Description
+    | :-------- | :------- 
+    | label | type: **string**
+    | value | type: **string**
+- **Description**: List of radio box values & texts.
+
 
 # Calender Input Properties
 
