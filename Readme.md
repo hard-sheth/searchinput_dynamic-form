@@ -668,6 +668,172 @@ function App() {
 }
 ```
 
+# Form Input Properties
+
+For the Calender we have used moment library. Where we have declared the above properties which are used for Calender Component. For Calender purpose we have used properties which are used for the Calender.
+        
+
+### Breakdown of the Enhancements Form
+#### label :  `string` | `JSX.Element`| `undefined`
+
+- **Type**: Optional
+- **Format**:  `string` | `JSX.Element`| `undefined`
+- **Description**: On the text Input declare input field stand for.
+
+#### labelClass :  `string`| `undefined`
+
+- **Type**: Optional
+- **Format**:  `string`| `undefined`
+- **Description**: With these css classes got applied for label
+
+#### placeholder :  `string`| `undefined`
+
+- **Type**: Optional
+- **Format**:  `string`| `undefined`
+- **Description**: Placeholder value for input element.
+
+#### validation:  `boolean`| `undefined`
+
+- **Type**: Optional
+- **Format**:  `boolean`| `undefined`
+- **Description**: We want to apply some validation success message than at that point of time we will make these true otherwise it should be optional.
+
+#### rightplaceText: `string` | `JSX.Element`|`undefined`
+
+- **Type**: Optional
+- **Format**: `string` | `JSX.Element`|`undefined`
+- **Description**: In the right side of input we want to display the something than those values pass down here.
+
+#### rightClass: `string` | `undefined`
+
+- **Type**: Optional
+- **Format**: `string`|`undefined`
+- **Description**: In the right side of input we want to apply css class.
+
+#### leftplaceText: `string` | `JSX.Element`|`undefined`
+
+- **Type**: Optional
+- **Format**: `string` | `JSX.Element`|`undefined`
+- **Description**: In the left side of input we want to display the something than those values pass down here.
+
+#### leftClass: `string` | `undefined`
+
+- **Type**: Optional
+- **Format**: `string`|`undefined`
+- **Description**: In the left side of input we want to apply css class.
+
+#### classinput: `string` | `undefined`
+
+- **Type**: Optional
+- **Format**: `string`|`undefined`
+- **Description**: In the input element want to apply css class.
+
+#### maininputclass: `string`|`undefined`
+- **Type**: Optional
+- **Format**: `string`.
+- **Description**: Class is applied over parent element. Class is applied over top of input & label.
+
+#### name : `string`
+- **Type**: Required
+- **Format**: `string`.
+- **Description**: Name of property.
+
+#### validationobj: `object`|`undefined`
+- **Type**: Optional
+- **Format**: `object`.
+- **Description**: We want to apply validation. To learn more about it review `https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation`
+
+#### somemsg: `string`| `JSX.Element`|`undefined`
+- **Type**: Optional
+- **Format**: `string`| `JSX.Element`.
+- **Description**: Below input element want to display something.
+
+#### value:`any`|`undefined`
+- **Type**: Optional
+- **Format**: any.
+- **Description**: Value of input
+
+#### dependableFormName: `string`|`undefined`
+- **Type**: Optional
+- **Format**: Provided in array<Date>. For example [`new Date()`].
+- **Description**: To know the value of other form input. For example we have two inputs which are account no & confirm account no. We want to knoe value of account no in  confirm account no input form.
+
+#### operation: `string`|`never`
+- **Type**: Optional
+- **Format**: `compare`|`greater`|`smaller`|`greaterequal`|`smallerequal`|`notequal`|`Promise`|`never`.
+- **Description**: Based on dependableFormName value & current input value. If dependableFormName property declared than operation is **Required**.
+
+#### dependableType: `string`|`never`
+- **Type**: Optional
+- **Format**: `Number`| `Date`| `String`|`never`.
+- **Description**: dependableFormName value type. If dependableFormName property declared than operation is **Required**.
+
+#### dependableFormError: `string`|`never`
+- **Type**: Optional
+- **Format**: `string`|`never`.
+- **Description**: dependable input field validation failed or got an error. If dependableFormName property declared than operation is **Required**.
+
+#### dependablePromise: `any`|`never`
+- **Type**: Optional
+- **Format**: 
+    ```
+    (
+        currentField: any,
+        dependantField: any
+    ) => true | string
+    ```
+- **Description**: dependable operation is Promise than dependablePromise is **Required**.
+
+#### maxInput : `number`| `undefined`
+- **Type**: Optional
+- **Format**: `number`| `undefined`.
+- **Description**: Maximum no of character which can be allowed in input element.
+
+#### minInput : `number`| `undefined`
+- **Type**: Optional
+- **Format**: `number`| `undefined`.
+- **Description**: Minimum no of character which can be allowed in input element.
+
+#### type: `string`
+- **Type**: Required
+- **Format**:  `text`| `search`| `textarea`| `telephone`| `password`| `email`| `searchoption`|`switch`| `radio`| `checkbox`| `select`| `dependabledropdown`| `voicetext` |`file`.
+- **Description**: based on these properties input will be updated.
+
+#### isMulti: `boolean`
+- **Type**: Required
+- **Format**: `boolean`.
+- **Description**: Allow multiple file in input.
+
+#### isPreview: `boolean`
+- **Type**: Required
+- **Format**: `boolean`.
+- **Description**: Kind of file type according to type show file type.
+
+#### maxFile: `number`
+- **Type**: Optional
+- **Format**:  `number`|`undefined`.
+- **Description**: No of files which can be allowed in files.
+
+#### uploadBtn: `string`| `JSX.Element`| `undefined`
+- **Type**: Optional
+- **Format**: `string`| `JSX.Element`| `undefined`.
+- **Description**: What kind of upload btn should be come in upload btn.
+
+#### clearable: `boolean`
+- **Type**: Required
+- **Format**: `boolean`.
+- **Description**: Want to remove the file from preview of file type.
+
+#### square: `boolean`
+- **Type**: Required
+- **Format**: `boolean`.
+- **Description**: Input type is hidden & square should be considerate.
+
+#### accept: `string`| `undefined`
+- **Type**: Optional
+- **Format**: `string` | `undefined`.
+- **Description**: What kind of file type should be excepted.
+
 # Calender Input Properties
 
 For the Calender we have used moment library. Where we have declared the above properties which are used for Calender Component. For Calender purpose we have used properties which are used for the Calender.
@@ -742,7 +908,7 @@ For the Calender we have used moment library. Where we have declared the above p
 - **Description**: To display icon on input of calendar.
 
 #### name : `string`
-- **Type**: Requried
+- **Type**: Required
 - **Format**: `string`.
 - **Description**: Name of property.
 
@@ -789,17 +955,17 @@ For the Calender we have used moment library. Where we have declared the above p
 #### operation: `string`|`never`
 - **Type**: Optional
 - **Format**: `compare`|`greater`|`smaller`|`greaterequal`|`smallerequal`|`notequal`|`Promise`|`never`.
-- **Description**: Based on dependableFormName value & current input value. If dependableFormName property declared than operation is **Requried**.
+- **Description**: Based on dependableFormName value & current input value. If dependableFormName property declared than operation is **Required**.
 
 #### dependableType: `string`|`never`
 - **Type**: Optional
 - **Format**: `Number`| `Date`| `String`|`never`.
-- **Description**: dependableFormName value type. If dependableFormName property declared than operation is **Requried**.
+- **Description**: dependableFormName value type. If dependableFormName property declared than operation is **Required**.
 
 #### dependableFormError: `string`|`never`
 - **Type**: Optional
 - **Format**: `string`|`never`.
-- **Description**: dependable input field validation failed or got an error. If dependableFormName property declared than operation is **Requried**.
+- **Description**: dependable input field validation failed or got an error. If dependableFormName property declared than operation is **Required**.
 
 #### dependablePromise: `any`|`never`
 - **Type**: Optional
@@ -810,14 +976,15 @@ For the Calender we have used moment library. Where we have declared the above p
         dependantField: any
     ) => true | string
     ```
-- **Description**: dependable operation is Promise than dependablePromise is **Requried**.
+- **Description**: dependable operation is Promise than dependablePromise is **Required**.
 
 #### type: `string`
-- **Type**: Requried
+- **Type**: Required
 - **Format**: `date`|`datetime`|`daterange`.
 - **Description**: based on these properties input will be updated.
+
 #### timeIntervals: `number`
-- **Type**: Requried
+- **Type**: Required
 - **Format**: number. For example 60 represents `1-2 am` like this.
 - **Description**: In calendar to select time from 12 am to 12 pm. 
 
@@ -836,7 +1003,7 @@ For the Calender we have used moment library. Where we have declared the above p
 #### particularDaysTiming: `Array<Array<string>>`
 - **Type**: Optional
 - **Format**: `Array<Array<string>>`|`undefined`. For example `[['8:30','16:30']]` represents time 8:30 AM to 4:30 PM
-- **Description**: Based on timing like 8:30 to 16:30 one break.particularDayTime mentioned than these property **Requried**
+- **Description**: Based on timing like 8:30 to 16:30 one break.particularDayTime mentioned than these property **Required**
 #### excludeDatesList: `
 - **Type**: Optional
 - **Format**:
