@@ -132,7 +132,7 @@ function AddressInput({
       </div>
       {showOptions && (
         <div
-          className="position-absolute list-group rounded mt-2 w-100 bg-white border border-1 z-1"
+          className="position-absolute p-0 list-group rounded mt-1 p-0 bg-white border border-1 z-1 "
           style={{
             overflowY: 'auto',
             maxHeight: '250px'
