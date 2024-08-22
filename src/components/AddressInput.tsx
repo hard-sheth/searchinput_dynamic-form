@@ -55,9 +55,6 @@ function AddressInput({
   }, [ref]);
 
   useEffect(() => {
-    if (startSearch == "type") {
-      isReload();
-    }
     updateText(selectValue)
   }, [selectValue]);
 
@@ -68,22 +65,6 @@ function AddressInput({
   return (
     <div className="position-relative">
       <div className={`input-group border border-1 ${classSearch ? classSearch : 'rounded'}`}>
-        {btnPlace == "LEFT" && (
-          <div className="input-group-item ">
-            <button
-              type="button"
-              className="btn bg-transparent"
-              onClick={() => {
-                if (startSearch == "click") {
-                  isReload();
-                  setShowOptions(true);
-                }
-              }}
-            >
-              {btnText}
-            </button>
-          </div>
-        )}
         <input
           type="search"
           className="form-control border-0 bg-transparent shadow-none"
@@ -113,22 +94,6 @@ function AddressInput({
             />
           </div>
         )}
-        {btnPlace == "RIGHT" && (
-          <div className="input-group-item ">
-            <button
-              type="button"
-              className="btn bg-transparent"
-              onClick={() => {
-                if (startSearch == "click") {
-                  isReload();
-                  setShowOptions(true);
-                }
-              }}
-            >
-              {btnText}
-            </button>
-          </div>
-        )}
       </div>
       {showOptions && (
         <div
@@ -139,15 +104,13 @@ function AddressInput({
           }}
           ref={ref}
         >
-          {/* <li>
-</li> */}
-            {selectOptions?.length > 0 &&
-              selectOptions.map((item, index: number) => {
-                return (
-                 <AddressOptionCard {...item} index={index} onchageAddress={updateAddress} />
-                );
-              })}
-          
+          {selectOptions?.length > 0 &&
+            selectOptions.map((item, index: number) => {
+              return (
+                <AddressOptionCard {...item} index={index} onchageAddress={updateAddress} />
+              );
+            })}
+
           {selectOptions.length == 0 && (
             <div className="text-center py-3">{optionNullMsg}</div>
           )}
