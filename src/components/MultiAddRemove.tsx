@@ -7,13 +7,12 @@ import DependantDropdown from "./DependantDropdown";
 import { CheckBoxOptions, inputTypesDiff, SelectOptions } from "./CustomForm";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
-import { inputTypesDiffDynamic } from "./DynamicFormUpdate";
 
 type ArrayForm = {
   update?: any;
   index: number;
   value: any;
-  details: inputTypesDiffDynamic[]|inputTypesDiff[];
+  details: inputTypesDiff[];
   formClass?: string;
   remove: any;
   propertyName: string;
@@ -66,7 +65,7 @@ function MultiItemForm({
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value:eventvalue } = event.target;
+    const { name, value: eventvalue } = event.target;
     update(index, propertyName, { [name]: eventvalue }); // Update the field in the array in real-time
   };
 
@@ -77,8 +76,14 @@ function MultiItemForm({
     }
   }
 
+  if (Object.values(valueofForm).length === 0) {
+    for (const itemName of details) {
+      setValue(itemName.name, '')
+    }
+  }
+
   return (
-    <div className={`row position-relative py-3 ${formClass}`} >
+    <div className={`row position-relative py-3 ${formClass ? formClass : ''}`} >
       {details.map((item, indexOfForm: number) => {
         return (
           <div
@@ -88,22 +93,20 @@ function MultiItemForm({
           >
             {item.label && (
               <label
-                className={`form-label ${
-                  item.labelClass ? item.labelClass : ""
-                }`}
+                className={`form-label ${item.labelClass ? item.labelClass : ""
+                  }`}
               >
                 {typeof item.label === "string" && item.label
                   ? item.label?.split(/\*/)[0]
                   : item.label}
                 <span className="text-danger">
                   {typeof item.label === "string" &&
-                  item.label?.split(/\*/)?.length > 1
+                    item.label?.split(/\*/)?.length > 1
                     ? "*"
                     : ""}
                 </span>
               </label>
             )}
-            {/* {item.type == "text" && <input type={item.type} {...register(item.name,{ ...item.validationobj })} className={`form-control `} />} */}
 
             {item.type == "text" && (
               <>
@@ -111,9 +114,8 @@ function MultiItemForm({
                   <div className="input-group">
                     {item.leftplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.leftClass ? item.leftClass : ""
-                        }`}
+                        className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                          }`}
                       >
                         {item.leftplaceText}
                       </div>
@@ -128,22 +130,18 @@ function MultiItemForm({
                         <input
                           type={item.type}
                           {...field}
-                          className={`${
-                            errors[item.name] ? "is-invalid" : ""
-                          } ${
-                            item.classinput ? item.classinput : "form-control"
-                          }`}
-                          placeholder={`${
-                            item.placeholder ? item.placeholder : ""
-                          }`}
+                          className={`${errors[item.name] ? "is-invalid" : ""
+                            } ${item.classinput ? item.classinput : "form-control"
+                            }`}
+                          placeholder={`${item.placeholder ? item.placeholder : ""
+                            }`}
                         />
                       )}
                     />
                     {item.rightplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.rightClass ? item.rightClass : ""
-                        }`}
+                        className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                          }`}
                       >
                         {item.rightplaceText}
                       </div>
@@ -161,12 +159,10 @@ function MultiItemForm({
                       <input
                         type={item.type}
                         {...field}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
-                        placeholder={`${
-                          item.placeholder ? item.placeholder : ""
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
+                        placeholder={`${item.placeholder ? item.placeholder : ""
+                          }`}
                         onChange={handleInputChange}
                       />
                     )}
@@ -181,9 +177,8 @@ function MultiItemForm({
                   <div className="input-group">
                     {item.leftplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.leftClass ? item.leftClass : ""
-                        }`}
+                        className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                          }`}
                       >
                         {item.leftplaceText}
                       </div>
@@ -198,23 +193,19 @@ function MultiItemForm({
                         <input
                           type={item.type}
                           {...field}
-                          className={`${
-                            errors[item.name] ? "is-invalid" : ""
-                          } ${
-                            item.classinput ? item.classinput : "form-control"
-                          }`}
-                          placeholder={`${
-                            item.placeholder ? item.placeholder : ""
-                          }`}
+                          className={`${errors[item.name] ? "is-invalid" : ""
+                            } ${item.classinput ? item.classinput : "form-control"
+                            }`}
+                          placeholder={`${item.placeholder ? item.placeholder : ""
+                            }`}
                           onChange={handleInputChange}
                         />
                       )}
                     />
                     {item.rightplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.rightClass ? item.rightClass : ""
-                        }`}
+                        className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                          }`}
                       >
                         {item.rightplaceText}
                       </div>
@@ -232,12 +223,10 @@ function MultiItemForm({
                       <input
                         type={item.type}
                         {...field}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
-                        placeholder={`${
-                          item.placeholder ? item.placeholder : ""
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
+                        placeholder={`${item.placeholder ? item.placeholder : ""
+                          }`}
                         onChange={handleInputChange}
                       />
                     )}
@@ -252,9 +241,8 @@ function MultiItemForm({
                   <div className="input-group">
                     {item.leftplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.leftClass ? item.leftClass : ""
-                        }`}
+                        className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                          }`}
                       >
                         {item.leftplaceText}
                       </div>
@@ -269,11 +257,9 @@ function MultiItemForm({
                         <input
                           type={item.type}
                           {...field}
-                          className={`${
-                            errors[item.name] ? "is-invalid" : ""
-                          } ${
-                            item.classinput ? item.classinput : "form-control"
-                          }`}
+                          className={`${errors[item.name] ? "is-invalid" : ""
+                            } ${item.classinput ? item.classinput : "form-control"
+                            }`}
                           onKeyUp={(e) => {
                             if (
                               e.key != "ArrowUp" &&
@@ -290,17 +276,15 @@ function MultiItemForm({
                               e.preventDefault();
                             }
                           }}
-                          placeholder={`${
-                            item.placeholder ? item.placeholder : ""
-                          }`}
+                          placeholder={`${item.placeholder ? item.placeholder : ""
+                            }`}
                         />
                       )}
                     />
                     {item.rightplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.rightClass ? item.rightClass : ""
-                        }`}
+                        className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                          }`}
                       >
                         {item.rightplaceText}
                       </div>
@@ -309,7 +293,7 @@ function MultiItemForm({
                 )}
                 {!item.rightplaceText && !item.leftplaceText && (
                   <Controller
-                  name={`${item.name}`}
+                    name={`${item.name}`}
                     control={control}
                     rules={{
                       ...item.validationobj,
@@ -318,9 +302,8 @@ function MultiItemForm({
                       <input
                         type={item.type}
                         {...field}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
                         onKeyUp={(
                           e: React.KeyboardEvent<HTMLInputElement>
                         ) => {
@@ -339,9 +322,8 @@ function MultiItemForm({
                             e.preventDefault();
                           }
                         }}
-                        placeholder={`${
-                          item.placeholder ? item.placeholder : ""
-                        }`}
+                        placeholder={`${item.placeholder ? item.placeholder : ""
+                          }`}
                       />
                     )}
                   />
@@ -355,9 +337,8 @@ function MultiItemForm({
                   <div className="input-group">
                     {item.leftplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.leftClass ? item.leftClass : ""
-                        }`}
+                        className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                          }`}
                       >
                         {item.leftplaceText}
                       </div>
@@ -373,11 +354,9 @@ function MultiItemForm({
                           type={"number"}
                           step={"0.01"}
                           {...field}
-                          className={`${
-                            errors[item.name] ? "is-invalid" : ""
-                          } ${
-                            item.classinput ? item.classinput : "form-control"
-                          }`}
+                          className={`${errors[item.name] ? "is-invalid" : ""
+                            } ${item.classinput ? item.classinput : "form-control"
+                            }`}
                           onKeyUp={(e) => {
                             if (
                               e.key != "ArrowUp" &&
@@ -394,17 +373,15 @@ function MultiItemForm({
                               e.preventDefault();
                             }
                           }}
-                          placeholder={`${
-                            item.placeholder ? item.placeholder : ""
-                          }`}
+                          placeholder={`${item.placeholder ? item.placeholder : ""
+                            }`}
                         />
                       )}
                     />
                     {item.rightplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.rightClass ? item.rightClass : ""
-                        }`}
+                        className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                          }`}
                       >
                         {item.rightplaceText}
                       </div>
@@ -413,7 +390,7 @@ function MultiItemForm({
                 )}
                 {!item.rightplaceText && !item.leftplaceText && (
                   <Controller
-                  name={`${item.name}`}
+                    name={`${item.name}`}
                     control={control}
                     rules={{
                       ...item.validationobj,
@@ -422,9 +399,8 @@ function MultiItemForm({
                       <input
                         type={"number"}
                         {...field}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
                         onKeyUp={(e) => {
                           if (
                             e.key != "ArrowUp" &&
@@ -441,9 +417,8 @@ function MultiItemForm({
                             e.preventDefault();
                           }
                         }}
-                        placeholder={`${
-                          item.placeholder ? item.placeholder : ""
-                        }`}
+                        placeholder={`${item.placeholder ? item.placeholder : ""
+                          }`}
                       />
                     )}
                   />
@@ -464,12 +439,10 @@ function MultiItemForm({
                       <input
                         type={item.type}
                         {...field}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
-                        placeholder={`${
-                          item.placeholder ? item.placeholder : ""
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
+                        placeholder={`${item.placeholder ? item.placeholder : ""
+                          }`}
                         onChange={handleInputChange}
                       />
                     )}
@@ -477,12 +450,10 @@ function MultiItemForm({
                       <input
                         type={"text"}
                         {...field}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
-                        placeholder={`${
-                          item.placeholder ? item.placeholder : ""
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
+                        placeholder={`${item.placeholder ? item.placeholder : ""
+                          }`}
                         onChange={handleInputChange}
                       />
                     )}
@@ -518,9 +489,8 @@ function MultiItemForm({
                   <div className="input-group">
                     {item.leftplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.leftClass ? item.leftClass : ""
-                        }`}
+                        className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                          }`}
                       >
                         {item.leftplaceText}
                       </div>
@@ -536,15 +506,12 @@ function MultiItemForm({
                           <input
                             type={"password"}
                             {...field}
-                            className={`${
-                              errors[item.name] ? "is-invalid" : ""
-                            } ${
-                              item.classinput ? item.classinput : "form-control"
-                            }`}
+                            className={`${errors[item.name] ? "is-invalid" : ""
+                              } ${item.classinput ? item.classinput : "form-control"
+                              }`}
                             onChange={handleInputChange}
-                            placeholder={`${
-                              item.placeholder ? item.placeholder : ""
-                            }`}
+                            placeholder={`${item.placeholder ? item.placeholder : ""
+                              }`}
                           />
                           {errors[item.name] && (
                             <div className="invalid-feedback">
@@ -556,9 +523,8 @@ function MultiItemForm({
                     />
                     {item.rightplaceText && (
                       <div
-                        className={`input-group-text ${
-                          item.rightClass ? item.rightClass : ""
-                        }`}
+                        className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                          }`}
                       >
                         {item.rightplaceText}
                       </div>
@@ -577,14 +543,11 @@ function MultiItemForm({
                         <input
                           type={"password"}
                           {...field}
-                          className={`${
-                            errors[item.name] ? "is-invalid" : ""
-                          } ${
-                            item.classinput ? item.classinput : "form-control"
-                          }`}
-                          placeholder={`${
-                            item.placeholder ? item.placeholder : ""
-                          }`}
+                          className={`${errors[item.name] ? "is-invalid" : ""
+                            } ${item.classinput ? item.classinput : "form-control"
+                            }`}
+                          placeholder={`${item.placeholder ? item.placeholder : ""
+                            }`}
                           onChange={handleInputChange}
                         />
                         {errors[item.name] && (
@@ -613,9 +576,8 @@ function MultiItemForm({
                         (radioOption: SelectOptions, index: number) => {
                           return (
                             <div
-                              className={`form-check ${
-                                item.placeForLabel ? "form-check-inline" : ""
-                              }`}
+                              className={`form-check ${item.placeForLabel ? "form-check-inline" : ""
+                                }`}
                               key={`radio-${index + 1}`}
                             >
                               <input
@@ -627,7 +589,7 @@ function MultiItemForm({
                                 onChange={() => {
                                   const keyName = item.name;
                                   const keyValue = radioOption.value;
-                                  update(index, propertyName, {[keyName]: keyValue,});
+                                  update(index, propertyName, { [keyName]: keyValue, });
                                 }}
                               />
                               <label
@@ -680,7 +642,7 @@ function MultiItemForm({
                                   (e) => {
                                     const keyName = item.name;
                                     const keyValue = e.target.checked;
-                                    update(index, item.name,{ [keyName]: keyValue });
+                                    update(index, item.name, { [keyName]: keyValue });
                                   }
                                   // setValue(field.name, e.target.checked)
                                 }
@@ -727,12 +689,11 @@ function MultiItemForm({
                         onInputChange={
                           item.inputchange ? item.inputchange : undefined
                         }
-                        // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
                       />
                     )}
                   />
                 )}
-                {item.url && (
+                {item.url &&
                   <Controller
                     name={item.name}
                     control={control}
@@ -745,18 +706,19 @@ function MultiItemForm({
                         defaultOptions
                         isSearchable={true}
                         value={field.value}
+
                         onChange={(newValue) => {
                           field.onChange(newValue);
                         }}
                         onInputChange={
-                          item.inputchange ? item.inputchange : () => {}
+                          item.inputchange ? item.inputchange : () => { }
                         }
                         loadOptions={item.optionPromise}
                         isClearable
                       />
                     )}
                   />
-                )}
+                }
                 {errors[item.name] && (
                   <div className="invalid-feedback d-block">
                     {errors[item.name]?.message as React.ReactNode}
@@ -769,8 +731,7 @@ function MultiItemForm({
               <div
                 className="col-12 col-md-12"
                 onDragOver={handleDragOver}
-                onDrop={(eve) => handleDrop(eve, item.name)}
-              >
+                onDrop={(eve) => handleDrop(eve, item.name)}>
                 {item.isPreview && !item.square && (
                   <FileBifercation
                     UpdteValue={updateFileForm}
@@ -793,9 +754,8 @@ function MultiItemForm({
                         // {...field}
                         onChange={(eve) => fileUploadEvent(eve, field.name)}
                         accept={item.accept}
-                        className={`${errors[item.name] ? "is-invalid" : ""} ${
-                          item.classinput ? item.classinput : "form-control"
-                        }`}
+                        className={`${errors[item.name] ? "is-invalid" : ""} ${item.classinput ? item.classinput : "form-control"
+                          }`}
                       />
                     )}
                   />
@@ -812,27 +772,26 @@ function MultiItemForm({
                     )}
                     {(!value[index][item.name] ||
                       value[index][item.name]?.length == 0) && (
-                      <div
-                        className={`border-dashed rounded text-center border-secondary ${
-                          item.classinput ? item.classinput : ""
-                        }`}
-                      >
-                        <label
-                          className="w-100 py-3"
-                          htmlFor={`file-input${indexOfForm}`}
+                        <div
+                          className={`border-dashed rounded text-center border-secondary ${item.classinput ? item.classinput : ""
+                            }`}
                         >
-                          <IoMdCloudUpload size={150} color="#006FAC" />
-                          <p>Drag & drop your files here</p>
-                        </label>
-                        <input
-                          type="file"
-                          hidden
-                          accept={item.accept}
-                          onChange={(eve) => fileUploadEvent(eve, item.name)}
-                          id={`file-input${indexOfForm}`}
-                        />
-                      </div>
-                    )}
+                          <label
+                            className="w-100 py-3"
+                            htmlFor={`file-input${indexOfForm}`}
+                          >
+                            <IoMdCloudUpload size={150} color="#006FAC" />
+                            <p>Drag & drop your files here</p>
+                          </label>
+                          <input
+                            type="file"
+                            hidden
+                            accept={item.accept}
+                            onChange={(eve) => fileUploadEvent(eve, item.name)}
+                            id={`file-input${indexOfForm}`}
+                          />
+                        </div>
+                      )}
                   </>
                 )}
               </div>
@@ -852,7 +811,7 @@ function MultiItemForm({
         );
       })}
       <div className="position-absolute text-end">
-        <button type="button" className="btn-close" aria-label="Close" onClick={()=>remove(index)}></button>
+        <button type="button" className="btn-close" aria-label="Close" onClick={() => remove(index)}></button>
       </div>
     </div>
   );

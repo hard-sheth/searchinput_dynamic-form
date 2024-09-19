@@ -721,7 +721,8 @@ function MultiAddRemoveArray({
 
             {item.type == "select" && (
               <div className="col ">
-                {!item.url && (
+                {/* {!item.url &&  */}
+                (
                   <Controller
                     name={item.name}
                     control={control}
@@ -743,8 +744,9 @@ function MultiAddRemoveArray({
                       />
                     )}
                   />
-                )}
-                {item.url && (
+                )
+                {/* } */}
+                {/* {item.url && (
                   <Controller
                     name={item.name}
                     control={control}
@@ -768,7 +770,7 @@ function MultiAddRemoveArray({
                       />
                     )}
                   />
-                )}
+                )} */}
                 {errors[item.name] && (
                   <div className="invalid-feedback d-block">
                     {errors[item.name]?.message as React.ReactNode}

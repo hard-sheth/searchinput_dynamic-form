@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Select from "react-select";
@@ -11,6 +11,7 @@ import { BsFloppy } from "react-icons/bs";
 import { FileBifercation } from "./FileBifercation";
 import { IoMdCloudUpload } from "react-icons/io";
 import { MultiItemForm } from "./MultiAddRemove";
+import ArrayForm from "./ArrayForm";
 // import VoiceInput from "./VoiceInput";
 const VoiceInput = React.lazy(() => import('./formInputs/VoiceInput'));
 
@@ -34,17 +35,17 @@ type Inputfields = {
 
 type InputOptionList = Inputfields & {
   type:
-    | "text"
-    | "search"
-    | "textarea"
-    | "number"
-    | "float"
-    | "telephone"
-    | "password"
-    | "email"
-    | "searchoption"
-    | "secure"
-    | "switch";
+  | "text"
+  | "search"
+  | "textarea"
+  | "number"
+  | "float"
+  | "telephone"
+  | "password"
+  | "email"
+  | "searchoption"
+  | "secure"
+  | "switch";
 };
 
 type RadioFields = Inputfields & {
@@ -65,9 +66,9 @@ type SelectAsync = Inputfields & {
   isMulti: boolean;
   maxOptions: number;
   inputchange?: (data: string) => {};
-  url: string;
+  url?: string;
   createable?: boolean;
-  optionPromise: () => void;
+  optionPromise?: () => void;
   // Promise<SelectOptions[]>
 };
 
@@ -171,34 +172,11 @@ function CustomForm(props: FormInput) {
     formState: { errors },
     handleSubmit,
     reset,
+    setFocus
   } = useForm();
 
-  const formArrayDetail = formDetails.filter((item) => {
-    if (item.type === "arrayform") {
-      return item;
-    }
-  });
-
-  let arrayName = "Array";
-
-  let multiArrayObj = {};
-
-  if (formArrayDetail.length > 0 && formArrayDetail[0].type === "arrayform") {
-    arrayName = formArrayDetail[0].name;
-    let updateObj: { [key: string]: any } = {};
-    for (const item of formArrayDetail[0].details) {
-      updateObj[`${item.name}`] = "";
-    }
-    multiArrayObj = updateObj;
-  }
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: arrayName,
-  });
-
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const [forceReset, setForceReset] = React.useState(false);
   const allFormData = watch();
 
   formValues(allFormData);
@@ -236,6 +214,12 @@ function CustomForm(props: FormInput) {
     }
   }, [formDetails]);
 
+  React.useEffect(() => {
+   if(forceReset){
+    setForceReset(false)
+   }
+  }, [forceReset]);
+
   function handleDragOver(event: any) {
     event.preventDefault();
     const files = event.dataTransfer.files;
@@ -258,65 +242,51 @@ function CustomForm(props: FormInput) {
     setValue(propertyname, event.target.files);
   }
 
-  /**
-   * Update indexed form values
-   *
-   * @param {number} indexOfForm // which position of form can be updated form value.
-   * @param {string} propertyname // name of property which we will update in form.
-   * @param {object} details // in object which can update object.
-   */
-  function formArrayUpdate(
-    indexOfForm: number,
-    propertyname: string,
-    details: object
-  ) {
-    const detailForm = allFormData[propertyname][indexOfForm];
-    const myUpdateValue = { ...detailForm, ...details };
-    setValue(`${propertyname}.${indexOfForm}`, { ...myUpdateValue });
-  }
+
+  React.useEffect(() => {
+    setFocus(formDetails[0].name)
+  }, [])
 
   return (
     <div>
       <div className="row">
         {formTitle && (
           <h1
-            className={`${
-              titlePosition === "center"
-                ? `text-center`
-                : titlePosition === "start"
+            className={`${titlePosition === "center"
+              ? `text-center`
+              : titlePosition === "start"
                 ? `text-start`
                 : titlePosition === "end"
-                ? `text-end`
-                : titleClass
-                ? titleClass
-                : ""
-            }`}
+                  ? `text-end`
+                  : titleClass
+                    ? titleClass
+                    : ""
+              }`}
           >
             {formTitle}
           </h1>
         )}
         <form className={`${formclass ? formclass : "row row-cols-1"} g-2`}>
           {formDetails.map((item: inputTypesDiff, indexOfForm: number) => {
+           
             return (
               <div
-                className={` ${
-                  item.maininputclass ? item.maininputclass : "col"
-                }`}
+                className={` ${item.maininputclass ? item.maininputclass : "col"
+                  }`}
                 id={`formInput-${indexOfForm}`}
                 key={indexOfForm}
               >
                 {item.label && (
                   <label
-                    className={`form-label ${
-                      item.labelClass ? item.labelClass : ""
-                    }`}
+                    className={`form-label ${item.labelClass ? item.labelClass : ""
+                      }`}
                   >
                     {typeof item.label === "string" && item.label
                       ? item.label?.split(/\*/)[0]
                       : item.label}
                     <span className="text-danger">
                       {typeof item.label === "string" &&
-                      item.label?.split(/\*/)?.length > 1
+                        item.label?.split(/\*/)?.length > 1
                         ? "*"
                         : ""}
                     </span>
@@ -330,9 +300,8 @@ function CustomForm(props: FormInput) {
                         <div className="input-group">
                           {item.leftplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.leftClass ? item.leftClass : ""
-                              }`}
+                              className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                                }`}
                             >
                               {item.leftplaceText}
                             </div>
@@ -347,24 +316,20 @@ function CustomForm(props: FormInput) {
                               <input
                                 type={item.type}
                                 {...field}
-                                className={`${
-                                  errors[item.name] ? "is-invalid" : ""
-                                } ${
-                                  item.classinput
+                                className={`${errors[item.name] ? "is-invalid" : ""
+                                  } ${item.classinput
                                     ? item.classinput
                                     : "form-control"
-                                }`}
-                                placeholder={`${
-                                  item.placeholder ? item.placeholder : ""
-                                }`}
+                                  }`}
+                                placeholder={`${item.placeholder ? item.placeholder : ""
+                                  }`}
                               />
                             )}
                           />
                           {item.rightplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.rightClass ? item.rightClass : ""
-                              }`}
+                              className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                                }`}
                             >
                               {item.rightplaceText}
                             </div>
@@ -382,16 +347,13 @@ function CustomForm(props: FormInput) {
                             <input
                               type={item.type}
                               {...field}
-                              className={`${
-                                errors[item.name] ? "is-invalid" : ""
-                              } ${
-                                item.classinput
+                              className={`${errors[item.name] ? "is-invalid" : ""
+                                } ${item.classinput
                                   ? item.classinput
                                   : "form-control"
-                              }`}
-                              placeholder={`${
-                                item.placeholder ? item.placeholder : ""
-                              }`}
+                                }`}
+                              placeholder={`${item.placeholder ? item.placeholder : ""
+                                }`}
                             />
                           )}
                         />
@@ -405,9 +367,8 @@ function CustomForm(props: FormInput) {
                         <div className="input-group">
                           {item.leftplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.leftClass ? item.leftClass : ""
-                              }`}
+                              className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                                }`}
                             >
                               {item.leftplaceText}
                             </div>
@@ -422,24 +383,20 @@ function CustomForm(props: FormInput) {
                               <input
                                 type={item.type}
                                 {...field}
-                                className={`${
-                                  errors[item.name] ? "is-invalid" : ""
-                                } ${
-                                  item.classinput
+                                className={`${errors[item.name] ? "is-invalid" : ""
+                                  } ${item.classinput
                                     ? item.classinput
                                     : "form-control"
-                                }`}
-                                placeholder={`${
-                                  item.placeholder ? item.placeholder : ""
-                                }`}
+                                  }`}
+                                placeholder={`${item.placeholder ? item.placeholder : ""
+                                  }`}
                               />
                             )}
                           />
                           {item.rightplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.rightClass ? item.rightClass : ""
-                              }`}
+                              className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                                }`}
                             >
                               {item.rightplaceText}
                             </div>
@@ -457,16 +414,13 @@ function CustomForm(props: FormInput) {
                             <input
                               type={item.type}
                               {...field}
-                              className={`${
-                                errors[item.name] ? "is-invalid" : ""
-                              } ${
-                                item.classinput
+                              className={`${errors[item.name] ? "is-invalid" : ""
+                                } ${item.classinput
                                   ? item.classinput
                                   : "form-control"
-                              }`}
-                              placeholder={`${
-                                item.placeholder ? item.placeholder : ""
-                              }`}
+                                }`}
+                              placeholder={`${item.placeholder ? item.placeholder : ""
+                                }`}
                             />
                           )}
                         />
@@ -480,9 +434,8 @@ function CustomForm(props: FormInput) {
                         <div className="input-group">
                           {item.leftplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.leftClass ? item.leftClass : ""
-                              }`}
+                              className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                                }`}
                             >
                               {item.leftplaceText}
                             </div>
@@ -497,13 +450,11 @@ function CustomForm(props: FormInput) {
                               <input
                                 type={item.type}
                                 {...field}
-                                className={`${
-                                  errors[item.name] ? "is-invalid" : ""
-                                } ${
-                                  item.classinput
+                                className={`${errors[item.name] ? "is-invalid" : ""
+                                  } ${item.classinput
                                     ? item.classinput
                                     : "form-control"
-                                }`}
+                                  }`}
                                 onKeyUp={(e) => {
                                   if (
                                     e.key != "ArrowUp" &&
@@ -516,17 +467,15 @@ function CustomForm(props: FormInput) {
                                     e.preventDefault();
                                   }
                                 }}
-                                placeholder={`${
-                                  item.placeholder ? item.placeholder : ""
-                                }`}
+                                placeholder={`${item.placeholder ? item.placeholder : ""
+                                  }`}
                               />
                             )}
                           />
                           {item.rightplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.rightClass ? item.rightClass : ""
-                              }`}
+                              className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                                }`}
                             >
                               {item.rightplaceText}
                             </div>
@@ -544,13 +493,11 @@ function CustomForm(props: FormInput) {
                             <input
                               type={item.type}
                               {...field}
-                              className={`${
-                                errors[item.name] ? "is-invalid" : ""
-                              } ${
-                                item.classinput
+                              className={`${errors[item.name] ? "is-invalid" : ""
+                                } ${item.classinput
                                   ? item.classinput
                                   : "form-control"
-                              }`}
+                                }`}
                               onKeyUp={(e) => {
                                 if (
                                   e.key != "ArrowUp" &&
@@ -563,9 +510,8 @@ function CustomForm(props: FormInput) {
                                   e.preventDefault();
                                 }
                               }}
-                              placeholder={`${
-                                item.placeholder ? item.placeholder : ""
-                              }`}
+                              placeholder={`${item.placeholder ? item.placeholder : ""
+                                }`}
                             />
                           )}
                         />
@@ -579,9 +525,8 @@ function CustomForm(props: FormInput) {
                         <div className="input-group">
                           {item.leftplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.leftClass ? item.leftClass : ""
-                              }`}
+                              className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                                }`}
                             >
                               {item.leftplaceText}
                             </div>
@@ -597,13 +542,11 @@ function CustomForm(props: FormInput) {
                                 type={item.type}
                                 step={"0.01"}
                                 {...field}
-                                className={`${
-                                  errors[item.name] ? "is-invalid" : ""
-                                } ${
-                                  item.classinput
+                                className={`${errors[item.name] ? "is-invalid" : ""
+                                  } ${item.classinput
                                     ? item.classinput
                                     : "form-control"
-                                }`}
+                                  }`}
                                 onKeyUp={(e) => {
                                   if (
                                     e.key != "ArrowUp" &&
@@ -616,17 +559,15 @@ function CustomForm(props: FormInput) {
                                     e.preventDefault();
                                   }
                                 }}
-                                placeholder={`${
-                                  item.placeholder ? item.placeholder : ""
-                                }`}
+                                placeholder={`${item.placeholder ? item.placeholder : ""
+                                  }`}
                               />
                             )}
                           />
                           {item.rightplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.rightClass ? item.rightClass : ""
-                              }`}
+                              className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                                }`}
                             >
                               {item.rightplaceText}
                             </div>
@@ -644,13 +585,11 @@ function CustomForm(props: FormInput) {
                             <input
                               type={item.type}
                               {...field}
-                              className={`${
-                                errors[item.name] ? "is-invalid" : ""
-                              } ${
-                                item.classinput
+                              className={`${errors[item.name] ? "is-invalid" : ""
+                                } ${item.classinput
                                   ? item.classinput
                                   : "form-control"
-                              }`}
+                                }`}
                               onKeyUp={(e) => {
                                 if (
                                   e.key != "ArrowUp" &&
@@ -663,9 +602,8 @@ function CustomForm(props: FormInput) {
                                   e.preventDefault();
                                 }
                               }}
-                              placeholder={`${
-                                item.placeholder ? item.placeholder : ""
-                              }`}
+                              placeholder={`${item.placeholder ? item.placeholder : ""
+                                }`}
                             />
                           )}
                         />
@@ -686,32 +624,26 @@ function CustomForm(props: FormInput) {
                             <input
                               type={item.type}
                               {...field}
-                              className={`${
-                                errors[item.name] ? "is-invalid" : ""
-                              } ${
-                                item.classinput
+                              className={`${errors[item.name] ? "is-invalid" : ""
+                                } ${item.classinput
                                   ? item.classinput
                                   : "form-control"
-                              }`}
-                              placeholder={`${
-                                item.placeholder ? item.placeholder : ""
-                              }`}
+                                }`}
+                              placeholder={`${item.placeholder ? item.placeholder : ""
+                                }`}
                             />
                           )}
                           {showPassword && (
                             <input
                               type={"text"}
                               {...field}
-                              className={`${
-                                errors[item.name] ? "is-invalid" : ""
-                              } ${
-                                item.classinput
+                              className={`${errors[item.name] ? "is-invalid" : ""
+                                } ${item.classinput
                                   ? item.classinput
                                   : "form-control"
-                              }`}
-                              placeholder={`${
-                                item.placeholder ? item.placeholder : ""
-                              }`}
+                                }`}
+                              placeholder={`${item.placeholder ? item.placeholder : ""
+                                }`}
                             />
                           )}
                           {!showPassword && (
@@ -746,9 +678,8 @@ function CustomForm(props: FormInput) {
                         <div className="input-group">
                           {item.leftplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.leftClass ? item.leftClass : ""
-                              }`}
+                              className={`input-group-text ${item.leftClass ? item.leftClass : ""
+                                }`}
                             >
                               {item.leftplaceText}
                             </div>
@@ -764,16 +695,13 @@ function CustomForm(props: FormInput) {
                                 <input
                                   type={"password"}
                                   {...field}
-                                  className={`${
-                                    errors[item.name] ? "is-invalid" : ""
-                                  } ${
-                                    item.classinput
+                                  className={`${errors[item.name] ? "is-invalid" : ""
+                                    } ${item.classinput
                                       ? item.classinput
                                       : "form-control"
-                                  }`}
-                                  placeholder={`${
-                                    item.placeholder ? item.placeholder : ""
-                                  }`}
+                                    }`}
+                                  placeholder={`${item.placeholder ? item.placeholder : ""
+                                    }`}
                                 />
                                 {errors[item.name] && (
                                   <div className="invalid-feedback">
@@ -788,9 +716,8 @@ function CustomForm(props: FormInput) {
                           />
                           {item.rightplaceText && (
                             <div
-                              className={`input-group-text ${
-                                item.rightClass ? item.rightClass : ""
-                              }`}
+                              className={`input-group-text ${item.rightClass ? item.rightClass : ""
+                                }`}
                             >
                               {item.rightplaceText}
                             </div>
@@ -809,16 +736,13 @@ function CustomForm(props: FormInput) {
                               <input
                                 type={"password"}
                                 {...field}
-                                className={`${
-                                  errors[item.name] ? "is-invalid" : ""
-                                } ${
-                                  item.classinput
+                                className={`${errors[item.name] ? "is-invalid" : ""
+                                  } ${item.classinput
                                     ? item.classinput
                                     : "form-control"
-                                }`}
-                                placeholder={`${
-                                  item.placeholder ? item.placeholder : ""
-                                }`}
+                                  }`}
+                                placeholder={`${item.placeholder ? item.placeholder : ""
+                                  }`}
                               />
                               {errors[item.name] && (
                                 <div className="invalid-feedback">
@@ -849,11 +773,10 @@ function CustomForm(props: FormInput) {
                               (radioOption: SelectOptions, index: number) => {
                                 return (
                                   <div
-                                    className={`form-check ${
-                                      item.placeForLabel
-                                        ? "form-check-inline"
-                                        : ""
-                                    }`}
+                                    className={`form-check ${item.placeForLabel
+                                      ? "form-check-inline"
+                                      : ""
+                                      }`}
                                     key={`radio-${index + 1}`}
                                   >
                                     <input
@@ -893,9 +816,8 @@ function CustomForm(props: FormInput) {
 
                   {item.type == "checkbox" && (
                     <div
-                      className={`col-12 ${
-                        item.classinput ? item.classinput : ""
-                      }`}
+                      className={`col-12 ${item.classinput ? item.classinput : ""
+                        }`}
                     >
                       <Controller
                         name={item.name}
@@ -967,7 +889,7 @@ function CustomForm(props: FormInput) {
                               onInputChange={
                                 item.inputchange ? item.inputchange : undefined
                               }
-                              // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
+                            // className={`${errors[item.name]? 'css-art2ul-ValueContainer2 is-invalid': ''} w-100`}
                             />
                           )}
                         />
@@ -989,7 +911,7 @@ function CustomForm(props: FormInput) {
                                 field.onChange(newValue);
                               }}
                               onInputChange={
-                                item.inputchange ? item.inputchange : () => {}
+                                item.inputchange ? item.inputchange : () => { }
                               }
                               loadOptions={item.optionPromise}
                               isClearable
@@ -1020,7 +942,7 @@ function CustomForm(props: FormInput) {
                               isDisabled={false}
                               isLoading={false}
                               onInputChange={
-                                item.inputchange ? item.inputchange : () => {}
+                                item.inputchange ? item.inputchange : () => { }
                               }
                               isSearchable={true}
                             />
@@ -1040,7 +962,7 @@ function CustomForm(props: FormInput) {
                               dependData={previousData}
                               dependUrl={item.url}
                               onInputChange={
-                                item.inputchange ? item.inputchange : () => {}
+                                item.inputchange ? item.inputchange : () => { }
                               }
                               maxOptions={item?.maxOptions}
                             />
@@ -1089,13 +1011,11 @@ function CustomForm(props: FormInput) {
                                   fileUploadEvent(eve, field.name)
                                 }
                                 accept={item.accept}
-                                className={`${
-                                  errors[item.name] ? "is-invalid" : ""
-                                } ${
-                                  item.classinput
+                                className={`${errors[item.name] ? "is-invalid" : ""
+                                  } ${item.classinput
                                     ? item.classinput
                                     : "form-control"
-                                }`}
+                                  }`}
                               />
                             )}
                           />
@@ -1112,68 +1032,34 @@ function CustomForm(props: FormInput) {
                           )}
                           {(!allFormData[item.name] ||
                             allFormData[item.name]?.length == 0) && (
-                            <div
-                              className={`border-dashed rounded text-center border-secondary ${
-                                item.classinput ? item.classinput : ""
-                              }`}
-                            >
-                              <label
-                                className="w-100 py-3"
-                                htmlFor={`file-input${indexOfForm}`}
+                              <div
+                                className={`border-dashed rounded text-center border-secondary ${item.classinput ? item.classinput : ""
+                                  }`}
                               >
-                                <IoMdCloudUpload size={150} color="#006FAC" />
-                                <p>Drag & drop your files here</p>
-                              </label>
-                              <input
-                                type="file"
-                                hidden
-                                accept={item.accept}
-                                onChange={(eve) =>
-                                  fileUploadEvent(eve, item.name)
-                                }
-                                id={`file-input${indexOfForm}`}
-                              />
-                            </div>
-                          )}
+                                <label
+                                  className="w-100 py-3"
+                                  htmlFor={`file-input${indexOfForm}`}
+                                >
+                                  <IoMdCloudUpload size={150} color="#006FAC" />
+                                  <p>Drag & drop your files here</p>
+                                </label>
+                                <input
+                                  type="file"
+                                  hidden
+                                  accept={item.accept}
+                                  onChange={(eve) =>
+                                    fileUploadEvent(eve, item.name)
+                                  }
+                                  id={`file-input${indexOfForm}`}
+                                />
+                              </div>
+                            )}
                         </>
                       )}
                     </div>
                   )}
 
-                  {item.type === "arrayform" && (
-                    <div>
-                      <div
-                        className={`${
-                          item.arrayformclass ? item.arrayformclass : `row mb-2`
-                        }`}
-                      >
-                        {fields.map((field, formIndexArray) => {
-                          return (
-                            <MultiItemForm
-                              key={field.id}
-                              update={formArrayUpdate}
-                              index={formIndexArray}
-                              value={field}
-                              details={item.details}
-                              formClass={item.arrayformclass}
-                              remove={remove}
-                              propertyName={item.name}
-                              valueofForm={
-                                allFormData[item.name][formIndexArray]
-                              }
-                            />
-                          );
-                        })}
-                      </div>
-                      <button
-                        type="button"
-                        className={"btn btn-primary" + ``}
-                        onClick={() => append(multiArrayObj)}
-                      >
-                        <FaPlus /> Add
-                      </button>
-                    </div>
-                  )}
+                  {item.type=== 'arrayform' && <ArrayForm item={item} setParentValue={setValue} resetForm={forceReset} />}
 
                   {/* {item.type === "voicetext" && (
                     <div className="position-relative">
@@ -1224,20 +1110,24 @@ function CustomForm(props: FormInput) {
           {extendForm && (extendForm)}
           <div
             className={`mt-3 col-12 col-md-12
-            ${
-              btnPosition === "start"
+            ${btnPosition === "start"
                 ? "text-start"
                 : btnPosition === "center"
-                ? "text-center"
-                : btnPosition === "end"
-                ? "text-end"
-                : "text-center"
-            } `}
+                  ? "text-center"
+                  : btnPosition === "end"
+                    ? "text-end"
+                    : "text-center"
+              } `}
           >
             <button
               type="submit"
               className="btn btn-outline-primary me-2"
-              onClick={handleSubmit(submitfn)}
+              onClick={
+                handleSubmit(submitfn)
+              }
+              disabled={
+                Object.keys(errors).length > 0 ? true : false
+              }
             >
               {!submitFormBtn && (
                 <>
@@ -1261,6 +1151,8 @@ function CustomForm(props: FormInput) {
                       }
                     }
                   );
+
+                  setForceReset(true);
 
                   if (dropDowns.length > 0) {
                     for (const dropItem of dropDowns) {
