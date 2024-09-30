@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaMicrophone, FaPlus, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Select from "react-select";
@@ -1061,7 +1061,7 @@ function CustomForm(props: FormInput) {
 
                   {item.type=== 'arrayform' && <ArrayForm item={item} setParentValue={setValue} resetForm={forceReset} />}
 
-                  {/* {item.type === "voicetext" && (
+                 {item.type === "voicetext" && (
                     <div className="position-relative">
                       <Controller
                         name={item.name}
@@ -1076,20 +1076,8 @@ function CustomForm(props: FormInput) {
                           />
                         )}
                       />
-                      {/* <div
-                        className="position-absolute end-0 top-0 bottom-0"
-                        onMouseDown={() => btnPressed(item.name)}
-                        onMouseUp={btnReleased}
-                      >
-                        <button
-                          type="button"
-                          className="btn btn-success rounded-circle"
-                        >
-                          <FaMicrophone />
-                        </button>
-                      </div> 
                     </div>
-                  )} */}
+                  )}
 
                   {errors[item.name] &&
                     item.type !== "password" &&
