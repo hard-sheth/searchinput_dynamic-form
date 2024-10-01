@@ -1,5 +1,5 @@
 import * as React from "react";
-import ReactPaginate from "react-paginate";
+// import ReactPaginate from "react-paginate";
 
 type paginationOption = {
   position?: "start" | "end" | "center"| "between";
@@ -24,21 +24,24 @@ function PaginationReact(props: paginationOption) {
             if(updatePageSize){
               updatePageSize(Number(e.target.value))
             }
-            }}>
+            }}
+            value={`${currentPageSize}`}
+            >
             {selectOptions &&
               selectOptions.map((pageSize, index: number) => (
-                <option key={index} value={`${pageSize}`} selected={currentPageSize == pageSize}>
+                <option key={index} value={`${pageSize}`} 
+                // selected={currentPageSize == pageSize}
+                >
                   {`${pageSize}`}
                 </option>
               ))}
           </select>
         </div>
       )}
-      <ReactPaginate
+      {/* <ReactPaginate
         breakLabel="..."
         nextLabel="next >"
         onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
         pageCount={totalPages}
         previousLabel="< previous"
         renderOnZeroPageCount={null}
@@ -51,12 +54,24 @@ function PaginationReact(props: paginationOption) {
         disabledClassName="disabled"
         previousClassName="page-item rounded-start"
         nextClassName="page-item rounded-end"
-      />
+      /> */}
     </div>
   );
 }
 
 export {
     PaginationReact,
-    paginationOption
 };
+
+
+
+/***
+ * // <PaginationReact
+      //     totalPages={2}
+      //     showSelectOptions={true}
+      //     selectOptions={[5, 10, 15, 20, 25, 50]}
+      //     updatePageClick={updatePageNo}
+      //     updatePageSize={updatePageSize}
+      //     position="between"
+      // />
+ */

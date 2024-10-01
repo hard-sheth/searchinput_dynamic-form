@@ -125,10 +125,6 @@ function FormDynamic(props: FormInput) {
     setValue(`${propertyname}.${indexOfForm}`, { ...myUpdateValue });
   }
 
-  if (validationLogic) {
-
-  }
-
   return (
     <div>
       <div className="row">

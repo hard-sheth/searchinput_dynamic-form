@@ -325,7 +325,9 @@ function App() {
 #### Table
 
 ```typescript
-import { TableReact, PaginationReact } from "searchinput_dynamic-form";
+import { TableReact } from "searchinput_dynamic-form";
+// import { TableReact, PaginationReact } from "searchinput_dynamic-form";  //It will come  soon.
+import ReactPaginate from "react-paginate";
 import {  useState } from "react";
 
 function App() {
@@ -413,14 +415,23 @@ function App() {
   return(
     <> 
       <TableReact columns={defaultColumns} data={tabledata} filter={true} sorting={true} updateFilter={filterd} updateSorting={sorted} />
-      <PaginationReact
-          totalPages={2}
-          showSelectOptions={true}
-          selectOptions={[5, 10, 15, 20, 25, 50]}
-          updatePageClick={updatePageNo}
-          updatePageSize={updatePageSize}
-          position="between"
-      />
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageCount={totalPages}
+        previousLabel="< previous"
+        renderOnZeroPageCount={null}
+        className="pagination justify-content-end"
+        pageClassName="rounded page-item"
+        pageLinkClassName="page-link"
+        previousLinkClassName="page-link"
+        nextLinkClassName="page-link"
+        activeLinkClassName="active"
+        disabledClassName="disabled"
+        previousClassName="page-item rounded-start"
+        nextClassName="page-item rounded-end"
+      /> 
     </>
   )
 }
